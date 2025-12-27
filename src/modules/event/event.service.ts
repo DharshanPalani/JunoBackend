@@ -1,0 +1,40 @@
+import { ParticipantsService } from "../participants/participants.service.ts";
+import { RegistrationService } from "../registrations/registration.service.ts";
+import { CreateEventDTO } from "./event.module.ts";
+
+type EventServiceReturn = {
+  message: string;
+  status: "error" | "success";
+};
+
+export class EventService {
+  private participantService = new ParticipantsService();
+  private registrationService = new RegistrationService();
+
+  async registerEvent(data: CreateEventDTO): Promise<EventServiceReturn> {
+    const participation = await this.participantService.findOrCreateParticipant(
+      data.participant,
+    );
+
+    if (!participation.participant) {
+      return { message: "Participant could not be created", status: "error" };
+    }
+
+    const registration = await this.registrationService.createRegistry(
+      participation.participant.id,
+      data.registration.day_id,
+    );
+
+    if (!registration.registeredData) {
+      return {
+        message: "Participant already registered for this day",
+        status: "error",
+      };
+    }
+
+    return {
+      message: "Participant registered successfully",
+      status: "success",
+    };
+  }
+}

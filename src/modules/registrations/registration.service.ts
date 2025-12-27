@@ -1,5 +1,6 @@
 import { RegistrationRepository } from "./registration.repository.ts";
 import { Registration } from "./registration.model.ts";
+import { Participant } from "../participants/participants.model.ts";
 
 type RegistrationServiveReturn = {
   registeredData: Registration | null;
@@ -14,10 +15,11 @@ export class RegistrationService {
   }
 
   async createRegistry(
-    input: Omit<Registration, "id" | "registered_at">,
+    participant_id: number,
+    day_id: number,
   ): Promise<RegistrationServiveReturn> {
     try {
-      const result = await this.registrationRepo.create(input);
+      const result = await this.registrationRepo.create(participant_id, day_id);
 
       return {
         registeredData: result,

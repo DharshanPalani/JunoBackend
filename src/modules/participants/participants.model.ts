@@ -1,5 +1,5 @@
 export interface Participant {
-  id?: number;
+  id: number;
   participant_name: string;
   college_name: string;
   department: string;
