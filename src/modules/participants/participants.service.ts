@@ -13,19 +13,18 @@ export class ParticipantsService {
     this.participantsRepo = new ParticipantsRepository();
   }
 
-  async registerParticipant(
+  async findOrCreateParticipant(
     input: Omit<Participant, "id" | "created_at">,
   ): Promise<ParticipantServiceReturn | null> {
-    let participantExistance =
-      await this.participantsRepo.findByContactNumberOrEmail(
-        input.contact_number,
-        input.email,
-      );
+    let result = await this.participantsRepo.findByContactNumberOrEmail(
+      input.contact_number,
+      input.email,
+    );
 
-    if (participantExistance) {
-      return null;
+    if (result) {
+      return { participant: result, status: "found" };
     }
 
-    return { participant: participantExistance, status: "created" };
+    return { participant: result, status: "created" };
   }
 }
