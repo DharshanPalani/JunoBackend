@@ -1,0 +1,15 @@
+import { EventDayRepository } from "./eventDay.repository.ts";
+
+export class EventDayService {
+  private eventDayRepo = new EventDayRepository();
+
+  async createDay(day_name: string) {
+    try {
+      const result = await this.eventDayRepo.create(day_name);
+
+      return result;
+    } catch (error: any) {
+      throw new Error("Error at event day service: " + error);
+    }
+  }
+}
