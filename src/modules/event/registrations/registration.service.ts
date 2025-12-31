@@ -1,6 +1,5 @@
 import { RegistrationRepository } from "./registration.repository.ts";
 import { Registration } from "./registration.model.ts";
-import { Participant } from "../participants/participants.model.ts";
 
 type RegistrationServiveReturn = {
   registeredData: Registration | null;
