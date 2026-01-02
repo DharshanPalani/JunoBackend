@@ -1,5 +1,5 @@
-import pool from "../../db.ts";
-import { EventDay } from "./eventDay.model.ts";
+import pool from "../../db";
+import { EventDay } from "./eventDay.model";
 
 export class EventDayRepository {
   async create(day_name: string): Promise<EventDay> {

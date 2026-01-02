@@ -1,4 +1,4 @@
-import { EventDayRepository } from "./eventDay.repository.ts";
+import { EventDayRepository } from "./eventDay.repository";
 
 type EventDayReturn = {
   message: string;

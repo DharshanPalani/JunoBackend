@@ -1,4 +1,4 @@
-import { EventService } from "./event.service.ts";
+import { EventService } from "./event.service";
 
 import { Request, Response } from "express";
 

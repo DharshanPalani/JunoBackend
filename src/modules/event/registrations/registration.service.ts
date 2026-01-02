@@ -1,5 +1,5 @@
-import { RegistrationRepository } from "./registration.repository.ts";
-import { Registration } from "./registration.model.ts";
+import { RegistrationRepository } from "./registration.repository";
+import { Registration } from "./registration.model";
 
 type RegistrationServiveReturn = {
   registeredData: Registration | null;

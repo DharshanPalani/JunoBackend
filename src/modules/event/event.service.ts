@@ -1,6 +1,6 @@
-import { ParticipantsService } from "./participants/participants.service.ts";
-import { RegistrationService } from "./registrations/registration.service.ts";
-import { CreateEventDTO } from "./event.module.ts";
+import { ParticipantsService } from "./participants/participants.service";
+import { RegistrationService } from "./registrations/registration.service";
+import { CreateEventDTO } from "./event.module";
 
 type EventServiceReturn = {
   message: string;
@@ -13,7 +13,7 @@ export class EventService {
 
   async registerEvent(data: CreateEventDTO): Promise<EventServiceReturn> {
     const participation = await this.participantService.findOrCreateParticipant(
-      data.participant
+      data.participant,
     );
 
     if (!participation.participant) {
@@ -22,7 +22,7 @@ export class EventService {
 
     const registration = await this.registrationService.createRegistry(
       participation.participant.id,
-      data.registration.day_id
+      data.registration.day_id,
     );
 
     if (!registration.registeredData) {

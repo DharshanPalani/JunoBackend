@@ -1,5 +1,5 @@
-import pool from "../../../db.ts";
-import { Participant } from "./participants.model.ts";
+import pool from "../../../db";
+import { Participant } from "./participants.model";
 
 export class ParticipantsRepository {
   async create(data: Omit<Participant, "id" | "created_at">) {
@@ -24,18 +24,18 @@ export class ParticipantsRepository {
         data.academic_year,
         data.contact_number,
         data.email,
-      ]
+      ],
     );
     return result.rows[0];
   }
 
   async findByContactNumberOrEmail(
     contact_numer: string,
-    email: string
+    email: string,
   ): Promise<Participant> {
     const result = await pool.query(
       `SELECT * FROM participants WHERE contact_number = $1 OR email = $2`,
-      [contact_numer, email]
+      [contact_numer, email],
     );
     return result.rows[0];
   }
