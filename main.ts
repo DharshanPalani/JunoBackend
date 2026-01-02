@@ -2,7 +2,7 @@ import express from "express";
 import type { Request, RequestHandler, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import schemaExecutor from "./schemaExecutor";
+import schemaExecutor from "./src/schemaExecutor";
 
 const app = express();
 
