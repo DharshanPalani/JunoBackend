@@ -10,4 +10,12 @@ export class EventDayRepository {
 
     return result.rows[0];
   }
+
+  async find(day_id: number): Promise<EventDay> {
+    const result = await pool.query(`SELECT * FROM event_days WHERE id = $1`, [
+      day_id,
+    ]);
+
+    return result.rows[0];
+  }
 }
