@@ -10,17 +10,14 @@ RUN npm install typescript
 
 COPY . .
 
-<<<<<<< HEAD
 RUN npx tsc
 
 EXPOSE 3000
 
 CMD ["npm", "run", "server"]
 
-=======
 RUN npx tsc && ls dist
 
 EXPOSE 3000
 
 CMD ["node", "dist/main.js"]
->>>>>>> 26a3d6d (added event day implementation)
