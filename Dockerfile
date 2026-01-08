@@ -10,12 +10,6 @@ RUN npm install typescript
 
 COPY . .
 
-RUN npx tsc
-
-EXPOSE 3000
-
-CMD ["npm", "run", "server"]
-
 RUN npx tsc && ls dist
 
 EXPOSE 3000
