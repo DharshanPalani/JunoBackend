@@ -2,11 +2,16 @@ import { Router } from "express";
 import { EventDayController } from "./eventDay.controller";
 
 const eventDayController = new EventDayController();
-const eventRouter = Router();
+const eventDayRouter = Router();
 
-eventRouter.post(
+eventDayRouter.post(
   "/day/register",
   eventDayController.registerDay.bind(eventDayController),
 );
 
-export default eventRouter;
+eventDayRouter.get(
+  "/day/:day_id",
+  eventDayController.findDay.bind(eventDayController),
+);
+
+export default eventDayRouter;

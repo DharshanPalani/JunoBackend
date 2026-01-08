@@ -28,11 +28,19 @@ export class EventDayService {
     try {
       const result = await this.eventDayRepo.find(day_id);
 
-      return {
-        message: "Found day successfully",
-        status: "success",
-        data: result,
-      };
+      if (result != null) {
+        return {
+          message: "Found day successfully",
+          status: "success",
+          data: result,
+        };
+      } else {
+        return {
+          message: "Day not found or some other error",
+          status: "error",
+          data: null,
+        };
+      }
     } catch (error: any) {
       return { message: error, status: "error", data: null };
     }
