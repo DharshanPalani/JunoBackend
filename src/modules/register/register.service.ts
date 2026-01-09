@@ -1,6 +1,6 @@
 import { ParticipantsService } from "./participants/participants.service";
 import { RegistrationService } from "./registrations/registration.service";
-import { CreateEventDTO } from "./event.module";
+import { CreateEventDTO } from "./register.module";
 
 type EventServiceReturn = {
   message: string;

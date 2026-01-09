@@ -1,8 +1,8 @@
 import pool from "../../db";
-import { EventDay } from "./eventDay.model";
+import { Day } from "./day.model";
 
-export class EventDayRepository {
-  async create(day_name: string): Promise<EventDay> {
+export class DayRepository {
+  async create(day_name: string): Promise<Day> {
     const result = await pool.query(
       `INSERT INTO event_days(day_name) VALUES($1) RETURNING *`,
       [day_name],
@@ -11,7 +11,7 @@ export class EventDayRepository {
     return result.rows[0];
   }
 
-  async find(day_id: number): Promise<EventDay> {
+  async find(day_id: number): Promise<Day> {
     const result = await pool.query(`SELECT * FROM event_days WHERE id = $1`, [
       day_id,
     ]);

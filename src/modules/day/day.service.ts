@@ -1,16 +1,16 @@
-import { EventDay } from "./eventDay.model";
-import { EventDayRepository } from "./eventDay.repository";
+import { Day } from "./day.model";
+import { DayRepository } from "./day.repository";
 
-type EventDayReturn = {
+type DayReturn = {
   message: string;
   status: "success" | "error";
-  data: EventDay | null;
+  data: Day | null;
 };
 
-export class EventDayService {
-  private eventDayRepo = new EventDayRepository();
+export class DayService {
+  private eventDayRepo = new DayRepository();
 
-  async createDay(day_name: string): Promise<EventDayReturn> {
+  async createDay(day_name: string): Promise<DayReturn> {
     try {
       const result = await this.eventDayRepo.create(day_name);
 
@@ -24,7 +24,7 @@ export class EventDayService {
     }
   }
 
-  async findDay(day_id: number): Promise<EventDayReturn> {
+  async findDay(day_id: number): Promise<DayReturn> {
     try {
       const result = await this.eventDayRepo.find(day_id);
 

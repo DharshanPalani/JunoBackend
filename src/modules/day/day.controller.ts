@@ -1,9 +1,9 @@
-import { EventDayService } from "./evenDay.service";
+import { DayService } from "./day.service";
 
 import { Request, Response } from "express";
 
-export class EventDayController {
-  private eventdayService = new EventDayService();
+export class DayController {
+  private eventdayService = new DayService();
 
   async registerDay(request: Request, response: Response) {
     try {

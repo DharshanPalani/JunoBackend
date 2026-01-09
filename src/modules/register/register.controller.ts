@@ -1,4 +1,4 @@
-import { EventService } from "./event.service";
+import { EventService } from "./register.service";
 
 import { Request, Response } from "express";
 

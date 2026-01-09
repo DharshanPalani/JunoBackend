@@ -3,7 +3,7 @@ import type { Request, RequestHandler, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import schemaExecutor from "./schemaExecutor";
-import eventDayRouter from "./modules/event_day/eventDay.routes";
+import dayRouter from "./modules/day/day.routes";
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(cookieParser() as RequestHandler);
 
 schemaExecutor(true);
 
-app.use("/admin", eventDayRouter);
+app.use("/admin", dayRouter);
 
 app.use("/", (request: Request, response: Response) => {
   response.send("Hello, world daw!");
