@@ -2,16 +2,16 @@ import { ParticipantsService } from "./participants/participants.service";
 import { RegistrationService } from "./registrations/registration.service";
 import { CreateEventDTO } from "./register.module";
 
-type EventServiceReturn = {
+type RegisterServiceReturn = {
   message: string;
   status: "error" | "success";
 };
 
-export class EventService {
+export class RegisterService {
   private participantService = new ParticipantsService();
   private registrationService = new RegistrationService();
 
-  async registerEvent(data: CreateEventDTO): Promise<EventServiceReturn> {
+  async registerEvent(data: CreateEventDTO): Promise<RegisterServiceReturn> {
     const participation = await this.participantService.findOrCreateParticipant(
       data.participant,
     );

@@ -1,9 +1,9 @@
-import { EventService } from "./register.service";
+import { RegisterService } from "./register.service";
 
 import { Request, Response } from "express";
 
-export class EventController {
-  private eventService = new EventService();
+export class RegisterController {
+  private eventService = new RegisterService();
 
   async register(request: Request, response: Response) {
     try {

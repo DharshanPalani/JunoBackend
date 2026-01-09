@@ -1,9 +1,12 @@
 import { Router } from "express";
-import { EventController } from "./register.controller";
+import { RegisterController } from "./register.controller";
 
-const eventController = new EventController();
-const eventRouter = Router();
+const registerController = new RegisterController();
+const registerRouter = Router();
 
-eventRouter.post("/register", eventController.register.bind(eventController));
+registerRouter.post(
+  "/register",
+  registerController.register.bind(registerController),
+);
 
-export default eventRouter;
+export default registerRouter;
