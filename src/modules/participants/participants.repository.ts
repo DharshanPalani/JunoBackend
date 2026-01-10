@@ -1,4 +1,4 @@
-import pool from "../../../db";
+import pool from "../../db";
 import { Participant } from "./participants.model";
 
 export class ParticipantsRepository {

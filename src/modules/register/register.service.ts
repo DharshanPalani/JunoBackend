@@ -1,5 +1,5 @@
-import { ParticipantsService } from "./participants/participants.service";
-import { RegistrationService } from "./registrations/registration.service";
+import { ParticipantsService } from "../participants/participants.service";
+import { RegistrationService } from "../registrations/registration.service";
 import { CreateEventDTO } from "./register.module";
 
 type RegisterServiceReturn = {
