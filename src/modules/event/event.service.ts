@@ -11,7 +11,7 @@ type EventServiceReturn = {
 export class EventService {
   private eventRepository = new EventRepository();
 
-  async registerDay(
+  async registerEvent(
     event_name: string,
     event_day_id: number,
   ): Promise<EventServiceReturn> {
@@ -32,6 +32,27 @@ export class EventService {
         data: null,
         status: "error",
         error: error,
+      };
+    }
+  }
+
+  async findEvent(event_id: number): Promise<EventServiceReturn> {
+    try {
+      let result = await this.eventRepository.find(event_id);
+      if (result == null) {
+        throw new Error("No event found with ID: " + event_id);
+      }
+      return {
+        message: "Fetched event successfully!",
+        data: result,
+        status: "success",
+      };
+    } catch (error: any) {
+      return {
+        message: "Error in fetching event!",
+        data: null,
+        status: "error",
+        error: error.message,
       };
     }
   }

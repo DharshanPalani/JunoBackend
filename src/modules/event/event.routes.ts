@@ -10,4 +10,6 @@ eventRouter.post(
   eventController.register.bind(eventController),
 );
 
+eventRouter.get("/event/:event_id", eventController.find.bind(eventController));
+
 export default eventRouter;

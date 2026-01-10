@@ -9,4 +9,12 @@ export class EventRepository {
     );
     return result.rows[0];
   }
+
+  async find(event_id: number): Promise<Event> {
+    const result = await pool.query(`SELECT * FROM events WHERE id = $1`, [
+      event_id,
+    ]);
+
+    return result.rows[0];
+  }
 }
