@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import schemaExecutor from "./schemaExecutor";
 import dayRouter from "./modules/day/day.routes";
+import eventRouter from "./modules/event/event.routes";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cookieParser() as RequestHandler);
 schemaExecutor(true);
 
 app.use("/admin", dayRouter);
+app.use("/admin", eventRouter);
 
 app.use("/", (request: Request, response: Response) => {
   response.send("Hello, world daw!");
