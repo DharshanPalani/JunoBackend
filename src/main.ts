@@ -3,6 +3,9 @@ import type { Request, RequestHandler, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import schemaExecutor from "./schemaExecutor";
+
+import registerRouter from "./modules/register/register.routes";
+
 import dayRouter from "./modules/day/day.routes";
 import eventRouter from "./modules/event/event.routes";
 
@@ -19,6 +22,8 @@ app.use(express.json());
 app.use(cookieParser() as RequestHandler);
 
 schemaExecutor(true);
+
+app.use("/event", registerRouter);
 
 app.use("/admin", dayRouter);
 app.use("/admin", eventRouter);

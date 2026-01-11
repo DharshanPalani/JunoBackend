@@ -15,6 +15,7 @@ export class RegisterController {
         contact_number,
         email,
         day_id,
+        event_Ids,
       } = request.body;
 
       const result = await this.eventService.registerEvent({
@@ -28,6 +29,9 @@ export class RegisterController {
         },
         registration: {
           day_id,
+        },
+        participationEvent: {
+          event_id: event_Ids,
         },
       });
       response

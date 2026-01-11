@@ -1,5 +1,6 @@
 import { ParticipantsService } from "../participants/participants.service";
 import { RegistrationService } from "../registrations/registration.service";
+import { EventParticipationService } from "../eventParticipation/eventParticipation.service";
 import { CreateEventDTO } from "./register.module";
 
 type RegisterServiceReturn = {
@@ -10,6 +11,7 @@ type RegisterServiceReturn = {
 export class RegisterService {
   private participantService = new ParticipantsService();
   private registrationService = new RegistrationService();
+  private eventParticipationService = new EventParticipationService();
 
   async registerEvent(data: CreateEventDTO): Promise<RegisterServiceReturn> {
     const participation = await this.participantService.findOrCreateParticipant(
@@ -32,8 +34,24 @@ export class RegisterService {
       };
     }
 
+    let eventFailedToRegisterID: number[] = [];
+
+    for (const eventID of data.participationEvent.event_id) {
+      const result = await this.eventParticipationService.register({
+        registration_id: registration.registeredData.id,
+        event_id: eventID,
+      });
+
+      if (result.status == "error") {
+        console.log(result.error);
+        eventFailedToRegisterID.push(eventID);
+      }
+    }
+
+    console.log(eventFailedToRegisterID);
+
     return {
-      message: "Participant registered successfully",
+      message: "Participant registered successfully including events",
       status: "success",
     };
   }
