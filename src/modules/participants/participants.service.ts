@@ -13,13 +13,22 @@ export class ParticipantsService {
     this.participantsRepo = new ParticipantsRepository();
   }
 
-  async findOrCreateParticipant(
-    input: Omit<Participant, "id" | "created_at">,
+  async findParticipantWithID(
+    input: Pick<Participant, "id">,
   ): Promise<ParticipantServiceReturn> {
-    let result = await this.participantsRepo.findByContactNumberOrEmail(
-      input.contact_number,
-      input.email,
-    );
+    const result = await this.participantsRepo.find(input);
+
+    if (result) {
+      return { participant: result, status: "found" };
+    }
+
+    return { participant: null, status: "not_found" };
+  }
+
+  async findOrCreateParticipant(
+    input: Pick<Participant, "google_id" | "participant_name" | "email">,
+  ): Promise<ParticipantServiceReturn> {
+    let result = await this.participantsRepo.find(input);
 
     if (result) {
       return { participant: result, status: "found" };

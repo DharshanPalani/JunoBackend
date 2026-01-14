@@ -14,12 +14,12 @@ export class RegisterService {
   private eventParticipationService = new EventParticipationService();
 
   async registerEvent(data: CreateEventDTO): Promise<RegisterServiceReturn> {
-    const participation = await this.participantService.findOrCreateParticipant(
-      data.participant,
-    );
+    const participation = await this.participantService.findParticipantWithID({
+      id: data.participant.participant_id,
+    });
 
     if (!participation.participant) {
-      return { message: "Participant could not be created", status: "error" };
+      return { message: "Participant could not be found", status: "error" };
     }
 
     const registration = await this.registrationService.createRegistry(
@@ -47,8 +47,6 @@ export class RegisterService {
         eventFailedToRegisterID.push(eventID);
       }
     }
-
-    console.log(eventFailedToRegisterID);
 
     return {
       message: "Participant registered successfully including events",

@@ -1,3 +1,4 @@
+import { Participant } from "../participants/participants.model";
 import { RegisterService } from "./register.service";
 
 import { Request, Response } from "express";
@@ -5,27 +6,15 @@ import { Request, Response } from "express";
 export class RegisterController {
   private eventService = new RegisterService();
 
-  async register(request: Request, response: Response) {
+  async register(request: any, response: Response) {
     try {
-      const {
-        participant_name,
-        college_name,
-        department,
-        academic_year,
-        contact_number,
-        email,
-        day_id,
-        event_Ids,
-      } = request.body;
+      const { day_id, event_Ids } = request.body;
+
+      const participant = request.user;
 
       const result = await this.eventService.registerEvent({
         participant: {
-          participant_name,
-          college_name,
-          department,
-          academic_year,
-          contact_number,
-          email,
+          participant_id: participant.id,
         },
         registration: {
           day_id,

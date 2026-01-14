@@ -12,11 +12,12 @@ const schemaExecutor = async (log: boolean = false) => {
   await pool.query(`
         CREATE TABLE IF NOT EXISTS participants(
         id SERIAL PRIMARY KEY,
-        participant_name TEXT NOT NULL,
-        college_name TEXT NOT NULL,
-        department TEXT NOT NULL,
-        academic_year TEXT NOT NULL,
-        contact_number TEXT UNIQUE NOT NULL,
+        google_id TEXT UNIQUE,
+        participant_name TEXT,
+        college_name TEXT,
+        department TEXT,
+        academic_year TEXT,
+        contact_number TEXT,
         email TEXT UNIQUE NOT NULL,
         created_at TIMESTAMP DEFAULT NOW()
     )`);

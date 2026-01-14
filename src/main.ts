@@ -5,6 +5,8 @@ import cors from "cors";
 import session from "express-session";
 import schemaExecutor from "./schemaExecutor";
 import passport from "passport";
+import pgSession from "connect-pg-simple";
+import pool from "./db";
 import "./modules/googleOAuth/passportSetup";
 
 import authRouter from "./modules/auth/auth.routes";
@@ -14,6 +16,7 @@ import dayRouter from "./modules/day/day.routes";
 import eventRouter from "./modules/event/event.routes";
 
 const app = express();
+const PgSession = pgSession(session);
 
 app.use(
   cors({
@@ -25,8 +28,23 @@ app.use(
 app.use(express.json());
 app.use(cookieParser() as RequestHandler);
 app.use(
-  session({ secret: "keyboard cat", resave: false, saveUninitialized: true }),
+  session({
+    store: new PgSession({
+      pool,
+      tableName: "session",
+    }),
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 4 * 7 * 24 * 60 * 60 * 1000, // 1 month I think
+    },
+  }),
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 

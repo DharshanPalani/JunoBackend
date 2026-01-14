@@ -2,41 +2,40 @@ import pool from "../../db";
 import { Participant } from "./participants.model";
 
 export class ParticipantsRepository {
-  async create(data: Omit<Participant, "id" | "created_at">) {
+  async create(
+    data: Pick<Participant, "google_id" | "participant_name" | "email">,
+  ) {
     const result = await pool.query(
       `INSERT INTO participants
       (
+        google_id,
         participant_name,
-        college_name,
-        department,
-        academic_year,
-        contact_number,
         email
       )
 
-      VALUES ($1, $2, $3, $4, $5, $6)
+      VALUES ($1, $2, $3)
 
       RETURNING *`,
-      [
-        data.participant_name,
-        data.college_name,
-        data.department,
-        data.academic_year,
-        data.contact_number,
-        data.email,
-      ],
+      [data.google_id, data.participant_name, data.email],
     );
     return result.rows[0];
   }
 
-  async findByContactNumberOrEmail(
-    contact_numer: string,
-    email: string,
-  ): Promise<Participant> {
+  async find(
+    input: Pick<Participant, "google_id"> | Pick<Participant, "id">,
+  ): Promise<Participant | null> {
+    if ("google_id" in input) {
+      const result = await pool.query(
+        `SELECT * FROM participants WHERE google_id = $1`,
+        [input.google_id],
+      );
+      return result.rows[0] ?? null;
+    }
+
     const result = await pool.query(
-      `SELECT * FROM participants WHERE contact_number = $1 OR email = $2`,
-      [contact_numer, email],
+      `SELECT * FROM participants WHERE id = $1`,
+      [input.id],
     );
-    return result.rows[0];
+    return result.rows[0] ?? null;
   }
 }

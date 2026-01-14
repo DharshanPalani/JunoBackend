@@ -1,5 +1,6 @@
 export interface Participant {
   id: number;
+  google_id: string;
   participant_name: string;
   college_name: string;
   department: string;
