@@ -15,7 +15,7 @@ export class GoogleOAuth {
 
         request.login(user, (err) => {
           if (err) return next(err);
-          response.send("Logged in!");
+          response.redirect("https://juno-frontend-staging.vercel.app/");
         });
       },
     )(request, response, next);
