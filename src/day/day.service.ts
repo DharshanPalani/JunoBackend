@@ -1,4 +1,4 @@
-import { Day } from "./day.model";
+import type { Day } from "./day.model";
 import { DayRepository } from "./day.repository";
 
 type DayReturn = {
