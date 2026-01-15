@@ -2,12 +2,11 @@
   "name": "package.json",
   "version": "1.0.0",
   "description": "A backend for Juno Event",
-  "main": "main.ts",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src --ext ts,tsx --exec tsx src/index.ts",
-    "start": "node dist/index.js",
-    "build": "npx tsc"
+    "start": "bun src/index.ts"
   },
   "author": "SoIT Solutions",
   "license": "ISC",
@@ -33,9 +32,6 @@
     "@types/express-session": "^1.18.2",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.5.2",
-    "@types/pg": "^8.15.5",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "@types/pg": "^8.15.5"
   }
 }
