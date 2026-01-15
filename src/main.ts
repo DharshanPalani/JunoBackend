@@ -27,6 +27,7 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser() as RequestHandler);
+app.set("trust proxy", 1);
 app.use(
   session({
     store: new PgSession({
@@ -38,7 +39,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: "none",
       maxAge: 4 * 7 * 24 * 60 * 60 * 1000, // 1 month I think
     },
