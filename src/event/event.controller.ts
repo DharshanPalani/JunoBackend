@@ -1,5 +1,5 @@
 import { EventService } from "./event.service";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 export class EventController {
   private eventService = new EventService();
@@ -28,6 +28,10 @@ export class EventController {
   async find(request: Request, response: Response) {
     try {
       const { event_id } = request.params;
+
+      if (event_id == undefined) {
+        return response.status(400).send("Invalid event id input");
+      }
 
       const result = await this.eventService.findEvent(parseInt(event_id));
 

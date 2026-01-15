@@ -1,5 +1,5 @@
 import { EventRepository } from "./event.repository";
-import { Event } from "./event.model";
+import type { Event } from "./event.model";
 
 type EventServiceReturn = {
   message: string;

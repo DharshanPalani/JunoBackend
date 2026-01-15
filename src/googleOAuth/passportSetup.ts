@@ -16,7 +16,7 @@ passport.use(
         const google_id = profile.id;
         const participant_name =
           profile._json.given_name + " " + profile._json.family_name;
-        const email = profile.emails?.[0].value ?? "";
+        const email = profile.emails?.[0]?.value ?? "";
 
         const { participant } =
           await participantService.findOrCreateParticipant({

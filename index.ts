@@ -3,17 +3,17 @@ import type { Request, RequestHandler, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import session from "express-session";
-import schemaExecutor from "./schemaExecutor";
+import schemaExecutor from "./src/schemaExecutor";
 import passport from "passport";
 import pgSession from "connect-pg-simple";
-import pool from "./db";
-import "./modules/googleOAuth/passportSetup";
+import pool from "./src/db";
+import "./src/googleOAuth/passportSetup";
 
-import authRouter from "./modules/auth/auth.routes";
-import registerRouter from "./modules/register/register.routes";
+import authRouter from "./src/auth/auth.routes";
+import registerRouter from "./src/register/register.routes";
 
-import dayRouter from "./modules/day/day.routes";
-import eventRouter from "./modules/event/event.routes";
+import dayRouter from "./src/day/day.routes";
+import eventRouter from "./src/event/event.routes";
 
 const app = express();
 const PgSession = pgSession(session);
@@ -23,18 +23,18 @@ const allowedOrigins = [
   "http://localhost:5173",
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      callback(new Error("CORS not allowed GET OU-"));
-    },
-    credentials: true,
-  }),
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin) return callback(null, true);
+//       if (allowedOrigins.includes(origin)) {
+//         return callback(null, true);
+//       }
+//       callback(new Error("CORS not allowed GET OU-"));
+//     },
+//     credentials: true,
+//   }),
+// );
 
 app.use(express.json());
 app.use(cookieParser() as RequestHandler);

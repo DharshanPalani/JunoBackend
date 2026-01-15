@@ -1,4 +1,4 @@
-import { EventParticipation } from "./eventParticipation.model";
+import type { EventParticipation } from "./eventParticipation.model";
 import { EventParticipationRepository } from "./eventParticipation.repository";
 
 type EventParticipationServiceReturn = {

@@ -1,5 +1,5 @@
-import { Event } from "./event.model";
-import pool from "../../db";
+import type { Event } from "./event.model";
+import pool from "@/db";
 
 export class EventRepository {
   async create(data: Omit<Event, "id">): Promise<Event> {

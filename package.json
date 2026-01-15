@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "A backend for Juno Event",
   "main": "index.ts",
+  "type": "module",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch src --ext ts,tsx --exec tsx src/index.ts",
-    "start": "bun src/index.ts"
+    "dev": "bun --watch index.ts",
+    "start": "bun index.ts"
   },
   "author": "SoIT Solutions",
   "license": "ISC",
@@ -33,5 +35,8 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.5.2",
     "@types/pg": "^8.15.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }

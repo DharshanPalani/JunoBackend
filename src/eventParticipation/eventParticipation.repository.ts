@@ -1,5 +1,5 @@
-import { EventParticipation } from "./eventParticipation.model";
-import pool from "../../db";
+import type { EventParticipation } from "./eventParticipation.model";
+import pool from "@/db";
 
 export class EventParticipationRepository {
   async create(
