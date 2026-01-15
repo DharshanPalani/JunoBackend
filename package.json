@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src --ext ts,tsx --exec tsx src/main.ts",
-    "server": "node dist/main.js"
+    "start": "node dist/main.js",
+    "build": "npx tsc"
   },
   "author": "SoIT Solutions",
   "license": "ISC",
