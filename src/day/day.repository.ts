@@ -1,5 +1,5 @@
-import pool from "../../db";
-import { Day } from "./day.model";
+import pool from "@/db";
+import type { Day } from "./day.model";
 
 export class DayRepository {
   async create(day_name: string): Promise<Day> {

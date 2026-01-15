@@ -1,7 +1,7 @@
-import { Participant } from "../participants/participants.model";
+import type { Participant } from "../participants/participants.model";
 import { RegisterService } from "./register.service";
 
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 export class RegisterController {
   private eventService = new RegisterService();

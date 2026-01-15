@@ -1,5 +1,5 @@
-import { Registration } from "./registration.model";
-import pool from "../../db";
+import type { Registration } from "./registration.model";
+import pool from "@/db";
 
 export class RegistrationRepository {
   async create(participant_id: number, day_id: number): Promise<Registration> {
