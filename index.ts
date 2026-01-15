@@ -1,4 +1,5 @@
 import express from "express";
+import serverless from "serverless-http";
 import type { Request, RequestHandler, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -76,3 +77,5 @@ app.use("/", (request: Request, response: Response) => {
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
+
+export default serverless(app);

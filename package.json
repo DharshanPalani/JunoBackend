@@ -24,7 +24,8 @@
     "nodemon": "^3.1.10",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "serverless-http": "^4.0.0"
   },
   "devDependencies": {
     "@types/connect-pg-simple": "^7.0.3",
