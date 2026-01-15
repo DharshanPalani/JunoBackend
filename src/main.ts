@@ -18,9 +18,20 @@ import eventRouter from "./modules/event/event.routes";
 const app = express();
 const PgSession = pgSession(session);
 
+const allowedOrigins = [
+  "https://juno-frontend-staging.vercel.app",
+  "http://localhost:5173",
+];
+
 app.use(
   cors({
-    origin: "https://juno-frontend-staging.vercel.app",
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error("CORS not allowed GET OU-"));
+    },
     credentials: true,
   }),
 );
@@ -40,7 +51,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false,
-      sameSite: "none",
+      sameSite: "lax",
       maxAge: 4 * 7 * 24 * 60 * 60 * 1000, // 1 month I think
     },
   }),
