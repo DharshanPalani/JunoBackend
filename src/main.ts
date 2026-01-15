@@ -20,7 +20,7 @@ const PgSession = pgSession(session);
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://juno-frontend-staging.vercel.app",
     credentials: true,
   }),
 );
@@ -38,8 +38,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 4 * 7 * 24 * 60 * 60 * 1000, // 1 month I think
     },
   }),
