@@ -2,3 +2,5 @@
 .env
 .token
 /dist
+.vercel
+.env*.local

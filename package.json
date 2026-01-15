@@ -7,8 +7,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun --watch api/index.ts",
-    "start": "bun api/index.ts"
+    "dev": "bun --watch index.ts",
+    "start": "bun index.ts"
   },
   "author": "SoIT Solutions",
   "license": "ISC",
