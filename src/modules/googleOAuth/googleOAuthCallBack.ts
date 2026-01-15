@@ -15,7 +15,7 @@ export class GoogleOAuth {
 
         request.login(user, (err) => {
           if (err) return next(err);
-          response.redirect("http://localhost:3000/");
+          response.redirect("http://localhost:5173/");
         });
       },
     )(request, response, next);
