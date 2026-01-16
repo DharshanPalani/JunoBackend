@@ -1,5 +1,5 @@
-import type { EventParticipation } from "./eventParticipation.model.ts";
-import { EventParticipationRepository } from "./eventParticipation.repository.ts";
+import type { EventParticipation } from "../model/eventParticipation.js";
+import { EventParticipationRepository } from "../repository/eventParticipation.js";
 
 type EventParticipationServiceReturn = {
   message: string;
@@ -11,7 +11,7 @@ type EventParticipationServiceReturn = {
 export class EventParticipationService {
   private eventParticipation = new EventParticipationRepository();
   async register(
-    input: Omit<EventParticipation, "id">,
+    input: Omit<EventParticipation, "id">
   ): Promise<EventParticipationServiceReturn> {
     try {
       const result = await this.eventParticipation.create(input);

@@ -1,5 +1,5 @@
-import { EventRepository } from "./event.repository.ts";
-import type { Event } from "./event.model.ts";
+import { EventRepository } from "../repository/event.js";
+import type { Event } from "../model/event.js";
 
 type EventServiceReturn = {
   message: string;
@@ -13,7 +13,7 @@ export class EventService {
 
   async registerEvent(
     event_name: string,
-    event_day_id: number,
+    event_day_id: number
   ): Promise<EventServiceReturn> {
     try {
       let result = await this.eventRepository.create({

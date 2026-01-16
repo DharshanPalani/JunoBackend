@@ -1,4 +1,4 @@
-import { DayService } from "./day.service.ts";
+import { DayService } from "../services/day.js";
 
 import type { Request, Response } from "express";
 
@@ -20,11 +20,13 @@ export class DayController {
 
   async findDay(request: Request, response: Response) {
     try {
-      const { day_id } = request.params;
+      let { day_id } = request.params;
 
       if (day_id == undefined) {
         return response.status(400).send("Invalid day id input");
       }
+
+      day_id = Array.isArray(day_id) ? day_id[0] : day_id;
 
       const result = await this.eventdayService.findDay(parseInt(day_id));
 

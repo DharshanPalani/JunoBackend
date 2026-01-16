@@ -1,5 +1,5 @@
-import { EventService } from "./event.service.ts";
 import type { Request, Response } from "express";
+import { EventService } from "../services/event.js";
 
 export class EventController {
   private eventService = new EventService();
@@ -10,7 +10,7 @@ export class EventController {
 
       const result = await this.eventService.registerEvent(
         event_name,
-        event_day_id,
+        event_day_id
       );
 
       response.status(result.status == "success" ? 201 : 409).json({
@@ -27,11 +27,13 @@ export class EventController {
 
   async find(request: Request, response: Response) {
     try {
-      const { event_id } = request.params;
+      let { event_id } = request.params;
 
       if (event_id == undefined) {
         return response.status(400).send("Invalid event id input");
       }
+
+      event_id = Array.isArray(event_id) ? event_id[0] : event_id;
 
       const result = await this.eventService.findEvent(parseInt(event_id));
 

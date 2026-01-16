@@ -1,20 +1,17 @@
 import express from "express";
-import serverless from "serverless-http";
-import type { Request, RequestHandler, Response } from "express";
-import cookieParser from "cookie-parser";
-import cors from "cors";
+import authRouter from "./routes/auth.js";
+import dayRouter from "./routes/day.js";
+import eventRouter from "./routes/event.js";
+import registerRouter from "./routes/register.js";
+
 import session from "express-session";
-import schemaExecutor from "./src/schemaExecutor.ts";
-import passport from "passport";
 import pgSession from "connect-pg-simple";
-import pool from "./src/db.ts";
-import "./src/googleOAuth/passportSetup.ts";
+import cors from "cors";
+import pool from "./db.js";
+import passport from "passport";
+import schemaExecutor from "./schemaExecutor.js";
 
-import authRouter from "./src/auth/auth.routes.ts";
-import registerRouter from "./src/register/register.routes.ts";
-
-import dayRouter from "./src/day/day.routes.ts";
-import eventRouter from "./src/event/event.routes.ts";
+import "./auth/passportSetup.js";
 
 const app = express();
 const PgSession = pgSession(session);
@@ -34,12 +31,9 @@ app.use(
       callback(new Error("CORS not allowed GET OU-"));
     },
     credentials: true,
-  }),
+  })
 );
 
-app.use(express.json());
-app.use(cookieParser() as RequestHandler);
-app.set("trust proxy", 1);
 app.use(
   session({
     store: new PgSession({
@@ -55,7 +49,7 @@ app.use(
       sameSite: "lax",
       maxAge: 4 * 7 * 24 * 60 * 60 * 1000, // 1 month I think
     },
-  }),
+  })
 );
 
 app.use(passport.initialize());
@@ -64,18 +58,12 @@ app.use(passport.session());
 schemaExecutor(true);
 
 app.use("/auth", authRouter);
-
 app.use("/event", registerRouter);
-
 app.use("/admin", dayRouter);
 app.use("/admin", eventRouter);
 
-app.use("/", (request: Request, response: Response) => {
-  response.send("Hello, world daw!");
+app.get("/", (_req, res) => {
+  res.send("Hello from backend!");
 });
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
-
-// export default serverless(app);
+export default app;

@@ -1,7 +1,7 @@
 import express from "express";
-import { GoogleOAuth } from "../googleOAuth/googleOAuthCallBack.ts";
 import type { Response } from "express";
 import passport from "passport";
+import { GoogleOAuth } from "../auth/googleOAuthCallBack.js";
 
 const googleOAuth = new GoogleOAuth();
 
@@ -11,12 +11,12 @@ authRouter.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
-  }),
+  })
 );
 
 authRouter.get(
   "/google/callback",
-  googleOAuth.googleCallback.bind(googleOAuth),
+  googleOAuth.googleCallback.bind(googleOAuth)
 );
 
 authRouter.get("/user", (req: any, res: Response) => {

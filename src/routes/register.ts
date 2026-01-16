@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { RegisterController } from "./register.controller.ts";
+import { RegisterController } from "../controller/register.js";
 
 const registerController = new RegisterController();
 const registerRouter = Router();
 
 registerRouter.post(
   "/register",
-  registerController.register.bind(registerController),
+  registerController.register.bind(registerController)
 );
 
 export default registerRouter;

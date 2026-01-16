@@ -1,4 +1,4 @@
-import pool from "./db.ts";
+import pool from "./db.js";
 
 const schemaExecutor = async (log: boolean = false) => {
   await pool.query(`

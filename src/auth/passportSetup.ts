@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { ParticipantsService } from "../participants/participants.service.ts";
+import { ParticipantsService } from "../services/participants.js";
 
 const participantService = new ParticipantsService();
 
@@ -32,8 +32,8 @@ passport.use(
       } catch (error) {
         done(error);
       }
-    },
-  ),
+    }
+  )
 );
 
 passport.serializeUser((participantId, done) => done(null, participantId));

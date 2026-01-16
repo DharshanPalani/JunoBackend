@@ -1,6 +1,5 @@
-import { RegisterService } from "./register.service.ts";
-
 import type { Request, Response } from "express";
+import { RegisterService } from "../services/register.js";
 
 export class RegisterController {
   private eventService = new RegisterService();

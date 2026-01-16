@@ -1,7 +1,7 @@
-import { ParticipantsService } from "../participants/participants.service.ts";
-import { RegistrationService } from "../registrations/registration.service.ts";
-import { EventParticipationService } from "../eventParticipation/eventParticipation.service.ts";
-import type { CreateEventDTO } from "./register.module.ts";
+import { ParticipantsService } from "./participants.js";
+import { RegistrationService } from "./registration.js";
+import { EventParticipationService } from "./eventParticipation.js";
+import type { CreateEventDTO } from "../model/register.js";
 
 type RegisterServiceReturn = {
   message: string;
@@ -24,7 +24,7 @@ export class RegisterService {
 
     const registration = await this.registrationService.createRegistry(
       participation.participant.id,
-      data.registration.day_id,
+      data.registration.day_id
     );
 
     if (!registration.registeredData) {

@@ -1,5 +1,5 @@
-import type { Day } from "./day.model.ts";
-import { DayRepository } from "./day.repository.ts";
+import type { Day } from "../model/day.js";
+import { DayRepository } from "../repository/day.js";
 
 type DayReturn = {
   message: string;

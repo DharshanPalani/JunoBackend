@@ -1,13 +1,13 @@
-import type { EventParticipation } from "./eventParticipation.model";
-import pool from "../db.ts";
+import pool from "../db.js";
+import { EventParticipation } from "../model/eventParticipation.js";
 
 export class EventParticipationRepository {
   async create(
-    data: Omit<EventParticipation, "id">,
+    data: Omit<EventParticipation, "id">
   ): Promise<EventParticipation> {
     const result = await pool.query(
       `INSERT INTO registration_events (registration_id, event_id) VALUES($1, $2) RETURNING *`,
-      [data.registration_id, data.event_id],
+      [data.registration_id, data.event_id]
     );
 
     console.log(result);

@@ -1,5 +1,5 @@
-import { ParticipantsRepository } from "./participants.repository.ts";
-import type { Participant } from "./participants.model.ts";
+import { ParticipantsRepository } from "../repository/participants.js";
+import type { Participant } from "../model/participants.js";
 
 type ParticipantServiceReturn = {
   participant: Participant | null;
@@ -14,7 +14,7 @@ export class ParticipantsService {
   }
 
   async findParticipantWithID(
-    input: Pick<Participant, "id">,
+    input: Pick<Participant, "id">
   ): Promise<ParticipantServiceReturn> {
     const result = await this.participantsRepo.find(input);
 
@@ -26,7 +26,7 @@ export class ParticipantsService {
   }
 
   async findOrCreateParticipant(
-    input: Pick<Participant, "google_id" | "participant_name" | "email">,
+    input: Pick<Participant, "google_id" | "participant_name" | "email">
   ): Promise<ParticipantServiceReturn> {
     let result = await this.participantsRepo.find(input);
 

@@ -1,5 +1,5 @@
-import { RegistrationRepository } from "./registration.repository.ts";
-import type { Registration } from "./registration.model.ts";
+import { RegistrationRepository } from "../repository/registration.js";
+import type { Registration } from "../model/registration.js";
 
 type RegistrationServiveReturn = {
   registeredData: Registration | null;
@@ -15,7 +15,7 @@ export class RegistrationService {
 
   async createRegistry(
     participant_id: number,
-    day_id: number,
+    day_id: number
   ): Promise<RegistrationServiveReturn> {
     try {
       const result = await this.registrationRepo.create(participant_id, day_id);
