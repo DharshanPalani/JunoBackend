@@ -34,6 +34,8 @@ app.use(
   })
 );
 
+app.set("trust proxy", 1);
+
 app.use(
   session({
     store: new PgSession({
@@ -45,8 +47,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 4 * 7 * 24 * 60 * 60 * 1000, // 1 month I think
     },
   })
