@@ -1,4 +1,4 @@
-import { EventController } from "./event.controller";
+import { EventController } from "./event.controller.ts";
 import express from "express";
 
 const eventController = new EventController();

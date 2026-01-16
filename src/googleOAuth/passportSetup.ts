@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { ParticipantsService } from "../participants/participants.service";
+import { ParticipantsService } from "../participants/participants.service.ts";
 
 const participantService = new ParticipantsService();
 

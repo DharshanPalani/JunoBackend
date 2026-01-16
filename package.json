@@ -4,12 +4,10 @@
   "description": "A backend for Juno Event",
   "main": "index.ts",
   "type": "module",
-  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun --watch index.ts",
     "start": "bun index.ts"
   },
+  "private": true,
   "author": "SoIT Solutions",
   "license": "ISC",
   "dependencies": {

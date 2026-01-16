@@ -1,5 +1,5 @@
-import type { EventParticipation } from "./eventParticipation.model";
-import { EventParticipationRepository } from "./eventParticipation.repository";
+import type { EventParticipation } from "./eventParticipation.model.ts";
+import { EventParticipationRepository } from "./eventParticipation.repository.ts";
 
 type EventParticipationServiceReturn = {
   message: string;

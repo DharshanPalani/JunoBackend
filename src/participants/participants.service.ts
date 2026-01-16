@@ -1,5 +1,5 @@
-import { ParticipantsRepository } from "./participants.repository";
-import type { Participant } from "./participants.model";
+import { ParticipantsRepository } from "./participants.repository.ts";
+import type { Participant } from "./participants.model.ts";
 
 type ParticipantServiceReturn = {
   participant: Participant | null;

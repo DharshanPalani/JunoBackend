@@ -1,5 +1,5 @@
-import type { Event } from "./event.model";
-import pool from "@/db";
+import type { Event } from "./event.model.ts";
+import pool from "../db.ts";
 
 export class EventRepository {
   async create(data: Omit<Event, "id">): Promise<Event> {

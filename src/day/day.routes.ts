@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { DayController } from "./day.controller";
+import { DayController } from "./day.controller.ts";
 
 const dayController = new DayController();
 const dayRouter = Router();

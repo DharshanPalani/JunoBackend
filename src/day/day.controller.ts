@@ -1,4 +1,4 @@
-import { DayService } from "./day.service";
+import { DayService } from "./day.service.ts";
 
 import type { Request, Response } from "express";
 

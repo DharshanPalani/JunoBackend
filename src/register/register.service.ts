@@ -1,7 +1,7 @@
-import { ParticipantsService } from "../participants/participants.service";
-import { RegistrationService } from "../registrations/registration.service";
-import { EventParticipationService } from "../eventParticipation/eventParticipation.service";
-import type { CreateEventDTO } from "./register.module";
+import { ParticipantsService } from "../participants/participants.service.ts";
+import { RegistrationService } from "../registrations/registration.service.ts";
+import { EventParticipationService } from "../eventParticipation/eventParticipation.service.ts";
+import type { CreateEventDTO } from "./register.module.ts";
 
 type RegisterServiceReturn = {
   message: string;

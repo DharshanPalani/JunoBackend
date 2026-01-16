@@ -1,5 +1,5 @@
-import pool from "@/db";
-import type { Participant } from "./participants.model";
+import pool from "../db.ts";
+import type { Participant } from "./participants.model.ts";
 
 export class ParticipantsRepository {
   async create(

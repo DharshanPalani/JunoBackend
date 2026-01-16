@@ -1,5 +1,4 @@
-import type { Participant } from "../participants/participants.model";
-import { RegisterService } from "./register.service";
+import { RegisterService } from "./register.service.ts";
 
 import type { Request, Response } from "express";
 

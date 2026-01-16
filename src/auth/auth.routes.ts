@@ -1,5 +1,5 @@
 import express from "express";
-import { GoogleOAuth } from "../googleOAuth/googleOAuthCallBack";
+import { GoogleOAuth } from "../googleOAuth/googleOAuthCallBack.ts";
 import type { Response } from "express";
 import passport from "passport";
 

@@ -4,17 +4,17 @@ import type { Request, RequestHandler, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import session from "express-session";
-import schemaExecutor from "@/schemaExecutor";
+import schemaExecutor from "./src/schemaExecutor.ts";
 import passport from "passport";
 import pgSession from "connect-pg-simple";
-import pool from "@/db";
-import "@/googleOAuth/passportSetup";
+import pool from "./src/db.ts";
+import "./src/googleOAuth/passportSetup.ts";
 
-import authRouter from "@/auth/auth.routes";
-import registerRouter from "@/register/register.routes";
+import authRouter from "./src/auth/auth.routes.ts";
+import registerRouter from "./src/register/register.routes.ts";
 
-import dayRouter from "@/day/day.routes";
-import eventRouter from "@/event/event.routes";
+import dayRouter from "./src/day/day.routes.ts";
+import eventRouter from "./src/event/event.routes.ts";
 
 const app = express();
 const PgSession = pgSession(session);
@@ -78,4 +78,4 @@ app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
 
-export default serverless(app);
+// export default serverless(app);
