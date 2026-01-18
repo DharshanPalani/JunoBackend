@@ -4,10 +4,7 @@ import dayRouter from "./routes/day.js";
 import eventRouter from "./routes/event.js";
 import registerRouter from "./routes/register.js";
 
-import session from "express-session";
-import pgSession from "connect-pg-simple";
 import cors from "cors";
-import pool from "./db.js";
 import passport from "passport";
 import schemaExecutor from "./schemaExecutor.js";
 
@@ -15,7 +12,6 @@ import "./auth/passportSetup.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
-const PgSession = pgSession(session);
 
 const allowedOrigins = [
   "https://juno-frontend-staging.vercel.app",
@@ -35,28 +31,8 @@ app.use(
   }),
 );
 
-// app.set("trust proxy", 1);
-
-// app.use(
-//   session({
-//     store: new PgSession({
-//       pool,
-//       tableName: "session",
-//     }),
-//     secret: "keyboard cat",
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       httpOnly: true,
-//       secure: true,
-//       sameSite: "none",
-//       maxAge: 4 * 7 * 24 * 60 * 60 * 1000, // 1 month I think
-//     },
-//   }),
-// );
 app.use(cookieParser());
 app.use(passport.initialize());
-// app.use(passport.session());
 
 schemaExecutor(true);
 
