@@ -13,12 +13,10 @@ export class GoogleOAuth {
       (err, user, info) => {
         if (err || !user) return response.redirect("/error");
 
-        request.login(user, (err) => {
-          if (err) return next(err);
-          request.session.save(() => {
-            response.redirect(process.env.FRONTEND_URL + "/?user=" + user);
-          });
-        });
+        // request.login(user, (err) => {
+        //   if (err) return next(err);
+        // });
+        response.redirect(process.env.FRONTEND_URL);
       },
     )(request, response, next);
   };

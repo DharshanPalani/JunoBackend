@@ -32,17 +32,17 @@ passport.use(
       } catch (error) {
         done(error);
       }
-    }
-  )
+    },
+  ),
 );
 
-passport.serializeUser((participantId, done) => done(null, participantId));
-passport.deserializeUser(async (participantId: number, done) => {
-  try {
-    const service = new ParticipantsService();
-    const result = await service.findParticipantWithID({ id: participantId });
-    done(null, result.participant);
-  } catch (err) {
-    done(err);
-  }
-});
+// passport.serializeUser((participantId, done) => done(null, participantId));
+// passport.deserializeUser(async (participantId: number, done) => {
+//   try {
+//     const service = new ParticipantsService();
+//     const result = await service.findParticipantWithID({ id: participantId });
+//     done(null, result.participant);
+//   } catch (err) {
+//     done(err);
+//   }
+// });
