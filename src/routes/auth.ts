@@ -11,12 +11,12 @@ authRouter.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
-  })
+  }),
 );
 
 authRouter.get(
   "/google/callback",
-  googleOAuth.googleCallback.bind(googleOAuth)
+  googleOAuth.googleCallback.bind(googleOAuth),
 );
 
 authRouter.get("/user", (req: any, res: Response) => {

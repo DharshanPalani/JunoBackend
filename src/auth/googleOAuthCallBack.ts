@@ -15,8 +15,9 @@ export class GoogleOAuth {
 
         request.login(user, (err) => {
           if (err) return next(err);
-          const frontend_url = process.env.FRONTEND_URL;
-          response.redirect(frontend_url + "/");
+          request.session.save(() => {
+            response.redirect(process.env.FRONTEND_URL + "/?user=" + user);
+          });
         });
       },
     )(request, response, next);

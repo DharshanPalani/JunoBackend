@@ -12,6 +12,7 @@ import passport from "passport";
 import schemaExecutor from "./schemaExecutor.js";
 
 import "./auth/passportSetup.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PgSession = pgSession(session);
@@ -31,31 +32,31 @@ app.use(
       callback(new Error("CORS not allowed GET OU-"));
     },
     credentials: true,
-  })
+  }),
 );
 
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 
-app.use(
-  session({
-    store: new PgSession({
-      pool,
-      tableName: "session",
-    }),
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 4 * 7 * 24 * 60 * 60 * 1000, // 1 month I think
-    },
-  })
-);
-
+// app.use(
+//   session({
+//     store: new PgSession({
+//       pool,
+//       tableName: "session",
+//     }),
+//     secret: "keyboard cat",
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       httpOnly: true,
+//       secure: true,
+//       sameSite: "none",
+//       maxAge: 4 * 7 * 24 * 60 * 60 * 1000, // 1 month I think
+//     },
+//   }),
+// );
+app.use(cookieParser());
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 schemaExecutor(true);
 
