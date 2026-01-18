@@ -1,23 +1,32 @@
 import type { Request, Response, NextFunction } from "express";
 import passport from "passport";
+import { signAccessToken, signRefreshToken } from "../utils/tokenHelper.js";
 
 export class GoogleOAuth {
-  googleCallback = (
-    request: Request,
-    response: Response,
-    next: NextFunction,
-  ) => {
+  googleCallback = (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate(
       "google",
-      { failureRedirect: "/error" },
-      (err, user, info) => {
-        if (err || !user) return response.redirect("/error");
+      { session: false },
+      (err, participantId) => {
+        if (err || !participantId) {
+          return res.redirect("/error");
+        }
 
-        // request.login(user, (err) => {
-        //   if (err) return next(err);
-        // });
-        response.redirect(process.env.FRONTEND_URL);
+        const accessToken = signAccessToken(participantId);
+        const refreshToken = signRefreshToken(participantId);
+
+        res.cookie("refresh_token", refreshToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          path: "/auth/refresh",
+        });
+
+        // send access token once
+        res.redirect(
+          `${process.env.FRONTEND_URL}/auth/success?token=${accessToken}`,
+        );
       },
-    )(request, response, next);
+    )(req, res, next);
   };
 }

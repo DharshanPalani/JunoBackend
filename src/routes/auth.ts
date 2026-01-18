@@ -1,7 +1,9 @@
 import express from "express";
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import passport from "passport";
 import { GoogleOAuth } from "../auth/googleOAuthCallBack.js";
+import { signAccessToken } from "../utils/tokenHelper.js";
+import jwt from "jsonwebtoken";
 
 const googleOAuth = new GoogleOAuth();
 
@@ -35,6 +37,20 @@ authRouter.get("/user", (req: any, res: Response) => {
     academic_year: user.academic_year,
     contact_number: user.contact_number,
   });
+});
+
+authRouter.post("/auth/refresh", (req: Request, res: Response) => {
+  const token = req.cookies.refresh_token;
+  if (!token) return res.sendStatus(401);
+
+  try {
+    const payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!) as any;
+
+    const newAccessToken = signAccessToken(payload.sub);
+    res.json({ accessToken: newAccessToken });
+  } catch {
+    res.sendStatus(403);
+  }
 });
 
 export default authRouter;
