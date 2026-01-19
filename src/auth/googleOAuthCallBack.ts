@@ -8,23 +8,15 @@ export class GoogleOAuth {
       "google",
       { session: false },
       (err, participantId) => {
-        if (err || !participantId) {
-          return res.redirect("/error");
-        }
+        if (err || !participantId) return res.redirect("/error?err=" + err);
 
         const accessToken = signAccessToken(participantId);
         const refreshToken = signRefreshToken(participantId);
 
-        res.cookie("refresh_token", refreshToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          path: "/auth/refresh",
-        });
-
-        // send access token once
         res.redirect(
-          `${process.env.FRONTEND_URL}/auth/success?token=${accessToken}`,
+          `${process.env.FRONTEND_URL}/auth/success?access=${encodeURIComponent(
+            accessToken,
+          )}&refresh=${encodeURIComponent(refreshToken)}`,
         );
       },
     )(req, res, next);
