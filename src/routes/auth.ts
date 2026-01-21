@@ -26,17 +26,32 @@ authRouter.get(
 authRouter.get("/user", async (req: Request, res: Response) => {
   try {
     const token = req.cookies.refresh_token;
-    if (!token) return res.status(404).json({ message: "User not found" });
 
-    const payload: any = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!);
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "No token found, user not authenticated" });
+    }
+
+    let payload: any;
+    try {
+      payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!);
+    } catch (err) {
+      return res.status(403).json({ message: "Invalid or expired token" });
+    }
 
     const service = new ParticipantsService();
     const { participant } = await service.findParticipantWithID({
-      id: payload.id,
+      id: payload.sub,
     });
 
-    if (!participant)
-      return res.status(404).json({ message: "User not found" });
+    if (!participant) {
+      return res
+        .status(404)
+        .json({
+          message: "User not found in database or invalid / undefined ID ",
+        });
+    }
 
     res.status(200).json({
       id: participant.id,
@@ -48,7 +63,8 @@ authRouter.get("/user", async (req: Request, res: Response) => {
       contact_number: participant.contact_number,
     });
   } catch (err) {
-    res.status(401).json({ message: "Invalid or expired token" });
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
