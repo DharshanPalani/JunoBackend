@@ -13,17 +13,17 @@ export class GoogleOAuth {
         const accessToken = signAccessToken(participantId);
         const refreshToken = signRefreshToken(participantId);
 
-        res.cookie("refresh_token", refreshToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          path: "/",
-        });
+        // res.cookie("refresh_token", refreshToken, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: "none",
+        //   path: "/",
+        // });
 
         res.redirect(
-          `${process.env.FRONTEND_URL}/auth/success?access=${encodeURIComponent(
-            accessToken,
-          )}`,
+          `${process.env.FRONTEND_URL}/auth/success?refresh=${encodeURIComponent(
+            refreshToken,
+          )}&access=${encodeURIComponent(accessToken)}`,
         );
       },
     )(req, res, next);

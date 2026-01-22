@@ -31,6 +31,14 @@ app.use(
   }),
 );
 
+// app.use(
+//   cors({
+//     origin: "https://juno-frontend-staging.vercel.app",
+//     credentials: true,
+//   }),
+// );
+
+app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 

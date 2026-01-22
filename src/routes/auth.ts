@@ -25,19 +25,30 @@ authRouter.get(
 
 authRouter.get("/user", async (req: Request, res: Response) => {
   try {
-    const token = req.cookies.refresh_token;
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "No token found, user not authenticated" });
+    if (!authHeader) {
+      return res.status(401).json({ message: "No access token" });
     }
 
-    let payload: any;
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Malformed auth header" });
+    }
+
+    // const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as any;
+    let payload;
+
     try {
-      payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!);
-    } catch (err) {
-      return res.status(403).json({ message: "Invalid or expired token" });
+      payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
+    } catch (error: any) {
+      return res
+        .status(401)
+        .json({ message: "Access token expired or invalid" });
+    }
+
+    if (payload.type !== "access") {
+      return res.status(401).json({ message: "Invalid token type" });
     }
 
     const service = new ParticipantsService();
@@ -46,11 +57,7 @@ authRouter.get("/user", async (req: Request, res: Response) => {
     });
 
     if (!participant) {
-      return res
-        .status(404)
-        .json({
-          message: "User not found in database or invalid / undefined ID ",
-        });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.status(200).json({
@@ -63,22 +70,43 @@ authRouter.get("/user", async (req: Request, res: Response) => {
       contact_number: participant.contact_number,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("AUTH USER ERROR:", err);
+    res.status(401).json({ message: "Invalid or expired access token" });
   }
 });
 
-authRouter.post("/refresh", (req: Request, res: Response) => {
-  const token = req.cookies.refresh_token;
-  if (!token) return res.sendStatus(401);
+authRouter.post("/refresh", async (req: Request, res: Response) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken)
+    return res.status(401).json({ message: "No refresh token" });
 
   try {
-    const payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!) as any;
+    const payload = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET!,
+    ) as any;
 
-    const newAccessToken = signAccessToken(payload.sub);
-    res.json({ accessToken: newAccessToken });
+    if (payload.type !== "refresh")
+      return res.status(401).json({ message: "Invalid token type" });
+
+    // const accessToken = jwt.sign(
+    //   { sub: payload.sub, type: "access" },
+    //   process.env.ACCESS_TOKEN_SECRET!,
+    //   { expiresIn: "10m" },
+    // );
+    //
+    let accessToken;
+
+    try {
+      accessToken = signAccessToken(payload.sub);
+    } catch (error) {
+      return res.status(401).json({ message: "Error in making access token" });
+    }
+
+    res.json({ accessToken });
   } catch {
-    res.sendStatus(403);
+    res.status(401).json({ message: "Invalid refresh token" });
   }
 });
 
