@@ -6,7 +6,12 @@ const registerRouter = Router();
 
 registerRouter.post(
   "/register",
-  registerController.register.bind(registerController)
+  registerController.register.bind(registerController),
+);
+
+registerRouter.get(
+  "/registrations",
+  registerController.registrations.bind(registerController),
 );
 
 export default registerRouter;

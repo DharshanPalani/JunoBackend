@@ -29,4 +29,5 @@ export class RegisterController {
       response.status(500).send("Internal server error");
     }
   }
+  async registrations() {}
 }
