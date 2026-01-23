@@ -2,10 +2,12 @@ import { ParticipantsService } from "./participants.js";
 import { RegistrationService } from "./registration.js";
 import { EventParticipationService } from "./eventParticipation.js";
 import type { CreateEventDTO } from "../model/register.js";
+import { Participant } from "../model/participants.js";
 
 type RegisterServiceReturn = {
   message: string;
   status: "error" | "success";
+  participant?: Participant | null;
 };
 
 export class RegisterService {
@@ -24,7 +26,7 @@ export class RegisterService {
 
     const registration = await this.registrationService.createRegistry(
       participation.participant.id,
-      data.registration.day_id
+      data.registration.day_id,
     );
 
     if (!registration.registeredData) {
@@ -51,6 +53,27 @@ export class RegisterService {
     return {
       message: "Participant registered successfully including events",
       status: "success",
+    };
+  }
+
+  async findRegisteredEvents(
+    participantID: number,
+  ): Promise<RegisterServiceReturn> {
+    const { participant } = await this.participantService.findParticipantWithID(
+      { id: participantID },
+    );
+
+    if (!participant) {
+      return {
+        message: "Participant could not be fetched with the ID, could be null",
+        status: "error",
+      };
+    }
+
+    return {
+      message: "Participant fetched successfully",
+      status: "success",
+      participant: participant,
     };
   }
 }

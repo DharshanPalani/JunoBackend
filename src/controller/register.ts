@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { RegisterService } from "../services/register.js";
+import { AuthRequest } from "../middlewares/auth.js";
 
 export class RegisterController {
   private eventService = new RegisterService();
@@ -29,5 +30,14 @@ export class RegisterController {
       response.status(500).send("Internal server error");
     }
   }
-  async registrations() {}
+  async registrations(request: AuthRequest, response: Response) {
+    try {
+      const participant = request.user!;
+      const result = await this.eventService.findRegisteredEvents(
+        participant.id,
+      );
+
+      response.status(result.status == "success" ? 201 : 404).json(result);
+    } catch (error: any) {}
+  }
 }
