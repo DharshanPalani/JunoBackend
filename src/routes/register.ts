@@ -7,6 +7,7 @@ const registerRouter = Router();
 
 registerRouter.post(
   "/register",
+  authMiddleware,
   registerController.register.bind(registerController),
 );
 
