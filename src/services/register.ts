@@ -24,16 +24,18 @@ export class RegisterService {
       return { message: "Participant could not be found", status: "error" };
     }
 
-    const registration = await this.registrationService.createRegistry(
+    const registration = await this.registrationService.createOrFindRegistry(
       participation.participant.id,
       data.registration.day_id,
     );
 
     if (!registration.registeredData) {
-      return {
-        message: "Participant already registered for this day",
-        status: "error",
-      };
+      if (registration.status !== "already_registered") {
+        return {
+          message: "Participant already registered for this day",
+          status: "error",
+        };
+      }
     }
 
     let eventFailedToRegisterID: number[] = [];

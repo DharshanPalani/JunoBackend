@@ -13,9 +13,9 @@ export class RegistrationService {
     this.registrationRepo = new RegistrationRepository();
   }
 
-  async createRegistry(
+  async createOrFindRegistry(
     participant_id: number,
-    day_id: number
+    day_id: number,
   ): Promise<RegistrationServiveReturn> {
     try {
       const result = await this.registrationRepo.create(participant_id, day_id);
@@ -26,8 +26,13 @@ export class RegistrationService {
       };
     } catch (error: any) {
       if (error.code === "23505") {
+        const existing = await this.registrationRepo.find(
+          participant_id,
+          day_id,
+        );
+
         return {
-          registeredData: null,
+          registeredData: existing,
           status: "already_registered",
         };
       }
