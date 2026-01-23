@@ -5,7 +5,7 @@ import { AuthRequest } from "../middlewares/auth.js";
 export class RegisterController {
   private eventService = new RegisterService();
 
-  async register(request: any, response: Response) {
+  async register(request: AuthRequest, response: Response) {
     try {
       const { day_id, event_Ids } = request.body;
 
