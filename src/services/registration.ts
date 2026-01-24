@@ -39,4 +39,11 @@ export class RegistrationService {
       throw error;
     }
   }
+
+  async findRegistry(
+    participant_id: number,
+    day_id: number,
+  ): Promise<Registration | null> {
+    return await this.registrationRepo.find(participant_id, day_id);
+  }
 }

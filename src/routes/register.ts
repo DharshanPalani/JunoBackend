@@ -12,7 +12,7 @@ registerRouter.post(
 );
 
 registerRouter.get(
-  "/registrations",
+  "/registrations/:day_id",
   authMiddleware,
   registerController.registrations.bind(registerController),
 );

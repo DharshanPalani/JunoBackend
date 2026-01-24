@@ -32,12 +32,29 @@ export class RegisterController {
   }
   async registrations(request: AuthRequest, response: Response) {
     try {
+      const day_id = Number(request.params.day_id);
       const participant = request.user!;
+
+      if (Number.isNaN(day_id)) {
+        return response.status(400).json({
+          status: "error",
+          message: "Invalid day_id",
+        });
+      }
+
       const result = await this.eventService.findRegisteredEvents(
         participant.id,
+        day_id,
       );
 
-      response.status(result.status == "success" ? 201 : 404).json(result);
-    } catch (error: any) {}
+      return response.status(200).json(result);
+    } catch (error: any) {
+      console.error("GET /event/registrations error:", error);
+
+      return response.status(500).json({
+        status: "error",
+        message: "Internal server error",
+      });
+    }
   }
 }

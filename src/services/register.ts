@@ -3,6 +3,7 @@ import { RegistrationService } from "./registration.js";
 import { EventParticipationService } from "./eventParticipation.js";
 import type { CreateEventDTO } from "../model/register.js";
 import { Participant } from "../model/participants.js";
+import { EventParticipation } from "../model/eventParticipation.js";
 
 type RegisterServiceReturn = {
   message: string;
@@ -32,7 +33,7 @@ export class RegisterService {
     if (!registration.registeredData) {
       if (registration.status !== "already_registered") {
         return {
-          message: "Participant already registered for this day",
+          message: "Error in participant registry",
           status: "error",
         };
       }
@@ -58,24 +59,36 @@ export class RegisterService {
     };
   }
 
-  async findRegisteredEvents(
-    participantID: number,
-  ): Promise<RegisterServiceReturn> {
+  async findRegisteredEvents(participantID: number, dayID: number) {
     const { participant } = await this.participantService.findParticipantWithID(
       { id: participantID },
     );
 
     if (!participant) {
+      return { message: "Participant not found", status: "error" };
+    }
+
+    const registration = await this.registrationService.findRegistry(
+      participant.id,
+      dayID,
+    );
+
+    if (!registration) {
       return {
-        message: "Participant could not be fetched with the ID, could be null",
-        status: "error",
+        message: "No registrations found",
+        status: "success",
+        participant: null,
       };
     }
 
+    const eventsRegistered = await this.eventParticipationService.registration({
+      registration_id: registration.id,
+    });
+
     return {
-      message: "Participant fetched successfully",
+      message: "Fetched participation event data",
       status: "success",
-      participant: participant,
+      event_ids: eventsRegistered.data,
     };
   }
 }
