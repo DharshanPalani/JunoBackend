@@ -12,12 +12,13 @@ const googleOAuth = new GoogleOAuth();
 
 const authRouter = express.Router();
 
-authRouter.get(
-  "/google",
+authRouter.get("/google", (req: Request, res: Response) => {
+  const state = req.query.state as string;
   passport.authenticate("google", {
     scope: ["profile", "email"],
-  }),
-);
+    state: state,
+  });
+});
 
 authRouter.get(
   "/google/callback",
