@@ -3,6 +3,7 @@ import authRouter from "./routes/auth.js";
 import dayRouter from "./routes/day.js";
 import eventRouter from "./routes/event.js";
 import registerRouter from "./routes/register.js";
+import profileRouter from "./routes/profile.js";
 
 import cors from "cors";
 import passport from "passport";
@@ -48,6 +49,7 @@ app.use("/auth", authRouter);
 app.use("/event", registerRouter);
 app.use("/admin", dayRouter);
 app.use("/admin", eventRouter);
+app.use("/profile", profileRouter);
 
 app.get("/", (_req, res) => {
   res.send("Hello from backend!");
