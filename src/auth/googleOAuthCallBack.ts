@@ -4,10 +4,10 @@ import { signAccessToken, signRefreshToken } from "../utils/tokenHelper.js";
 
 export class GoogleOAuth {
   googleCallback = (req: Request, res: Response, next: NextFunction) => {
-    const rawState = req.query.state as string;
+    // const rawState = req.query.state as string;
     // This is the state data sent from frontend
     // Which then the google oauth receives and sends it back for the callback
-    const state = JSON.parse(decodeURIComponent(rawState));
+    // const state = JSON.parse(decodeURIComponent(rawState));
     passport.authenticate(
       "google",
       { session: false },
