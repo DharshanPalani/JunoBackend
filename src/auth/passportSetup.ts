@@ -14,8 +14,8 @@ passport.use(
     async (_accessToken, _refreshToken, profile, done) => {
       try {
         const google_id = profile.id;
-        const participant_name =
-          profile._json.given_name + " " + profile._json.family_name;
+        const participant_name = "";
+        // profile._json.given_name + " " + profile._json.family_name;
         const email = profile.emails?.[0]?.value ?? "";
 
         const { participant } =
