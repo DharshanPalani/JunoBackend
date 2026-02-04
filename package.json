@@ -3,6 +3,7 @@
   "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.94.0",
+    "@types/multer": "^2.0.0",
     "@types/passport-google-oauth20": "^2.0.17",
     "connect-pg-simple": "^10.0.0",
     "cookie-parser": "^1.4.7",

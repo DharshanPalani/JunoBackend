@@ -42,15 +42,15 @@ export class ParticipantsPaymentRepository {
   }): Promise<ParticipantsPayments> {
     const result = await pool.query(
       `UPDATE participants_payment
-       SET status = $1,
-           payment_screenshot = COALESCE($2, payment_screenshot),
-           paid_at = CASE
-             WHEN $1 IN ('PAYMENT_DONE', 'VERIFIED_PAYMENT')
-             THEN NOW()
-             ELSE paid_at
-           END
-       WHERE id = $3
-       RETURNING *`,
+      SET status = $1,
+          payment_screenshot = COALESCE($2, payment_screenshot),
+          paid_at = CASE
+            WHEN status IN ('PAYMENT_DONE', 'VERIFIED_PAYMENT')
+            THEN NOW()
+            ELSE paid_at
+          END
+      WHERE id = $3
+      RETURNING *`,
       [input.status, input.payment_screenshot ?? null, input.id],
     );
 

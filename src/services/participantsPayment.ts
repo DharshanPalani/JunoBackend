@@ -38,18 +38,15 @@ export class ParticipantsPaymentService {
     }
   }
 
-  async markPaymentDone(
-    payment_id: number,
-    screenshotPath: string,
-  ): Promise<ParticipantsPaymentServiceReturn> {
+  async markPaymentDone(payment_id: number, screenshotPath: string) {
     try {
-      const payment = await this.repo.find({ id: payment_id });
+      const payment = await this.repo.find({ registration_id: payment_id });
 
       if (!payment) {
         return {
           status: "error",
           participantsPayment: null,
-          error: "Payment not found",
+          error: payment_id,
         };
       }
 
@@ -75,7 +72,7 @@ export class ParticipantsPaymentService {
       return {
         status: "error",
         participantsPayment: null,
-        error: "Failed to update payment",
+        error: err.message,
       };
     }
   }
