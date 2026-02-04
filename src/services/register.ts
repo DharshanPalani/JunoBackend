@@ -1,9 +1,9 @@
 import { ParticipantsService } from "./participants.js";
 import { RegistrationService } from "./registration.js";
 import { EventParticipationService } from "./eventParticipation.js";
+import { ParticipantsPaymentService } from "./participantsPayment.js";
 import type { CreateEventDTO } from "../model/register.js";
-import { Participant } from "../model/participants.js";
-import { EventParticipation } from "../model/eventParticipation.js";
+import type { Participant } from "../model/participants.js";
 
 type RegisterServiceReturn = {
   message: string;
@@ -15,57 +15,79 @@ export class RegisterService {
   private participantService = new ParticipantsService();
   private registrationService = new RegistrationService();
   private eventParticipationService = new EventParticipationService();
+  private participantsPaymentService = new ParticipantsPaymentService();
 
   async registerEvent(data: CreateEventDTO): Promise<RegisterServiceReturn> {
-    const participation = await this.participantService.findParticipantWithID({
-      id: data.participant.participant_id,
-    });
-
-    if (!participation.participant) {
-      return { message: "Participant could not be found", status: "error" };
-    }
-
-    const registration = await this.registrationService.createOrFindRegistry(
-      participation.participant.id,
-      data.registration.day_id,
+    const { participant } = await this.participantService.findParticipantWithID(
+      {
+        id: data.participant.participant_id,
+      },
     );
 
-    if (!registration.registeredData) {
-      if (registration.status !== "already_registered") {
-        return {
-          message: "Error in participant registry",
-          status: "error",
-        };
-      }
+    if (!participant) {
+      return {
+        message: "Participant could not be found",
+        status: "error",
+      };
     }
 
-    let eventFailedToRegisterID: number[] = [];
+    const registrationResult =
+      await this.registrationService.createOrFindRegistry(
+        participant.id,
+        data.registration.day_id,
+      );
+
+    const registeredData = registrationResult.registeredData;
+
+    if (!registeredData) {
+      return {
+        message: "Failed to create or fetch registration",
+        status: "error",
+      };
+    }
+
+    const paymentResult =
+      await this.participantsPaymentService.createOrFindPaymentEntry(
+        registeredData.id,
+      );
+
+    if (paymentResult.status === "error") {
+      return {
+        message: "Failed to initialize payment",
+        status: "error",
+      };
+    }
 
     for (const eventID of data.participationEvent.event_id) {
       const result = await this.eventParticipationService.register({
-        registration_id: registration.registeredData.id,
+        registration_id: registeredData.id,
         event_id: eventID,
       });
 
-      if (result.status == "error") {
-        console.log(result.error);
-        eventFailedToRegisterID.push(eventID);
+      if (result.status === "error") {
+        console.error(`Failed to register event ${eventID}:`, result.error);
       }
     }
 
     return {
-      message: "Participant registered successfully including events",
+      message: "Participant registered successfully",
       status: "success",
+      participant,
     };
   }
 
   async findRegisteredEvents(participantID: number, dayID: number) {
     const { participant } = await this.participantService.findParticipantWithID(
-      { id: participantID },
+      {
+        id: participantID,
+      },
     );
 
     if (!participant) {
-      return { message: "Participant not found", status: "error" };
+      return {
+        message: "Participant not found",
+        status: "error",
+      };
     }
 
     const registration = await this.registrationService.findRegistry(

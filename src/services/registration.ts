@@ -1,22 +1,20 @@
 import { RegistrationRepository } from "../repository/registration.js";
 import type { Registration } from "../model/registration.js";
 
-type RegistrationServiveReturn = {
+type RegistrationStatus = "registered" | "already_registered";
+
+type RegistrationServiceReturn = {
   registeredData: Registration | null;
-  status: string;
+  status: RegistrationStatus;
 };
 
 export class RegistrationService {
-  private registrationRepo: RegistrationRepository;
-
-  constructor() {
-    this.registrationRepo = new RegistrationRepository();
-  }
+  private registrationRepo = new RegistrationRepository();
 
   async createOrFindRegistry(
     participant_id: number,
     day_id: number,
-  ): Promise<RegistrationServiveReturn> {
+  ): Promise<RegistrationServiceReturn> {
     try {
       const result = await this.registrationRepo.create(participant_id, day_id);
 
@@ -31,11 +29,16 @@ export class RegistrationService {
           day_id,
         );
 
+        if (!existing) {
+          throw new Error("Registration exists but could not be found");
+        }
+
         return {
           registeredData: existing,
           status: "already_registered",
         };
       }
+
       throw error;
     }
   }
@@ -44,6 +47,6 @@ export class RegistrationService {
     participant_id: number,
     day_id: number,
   ): Promise<Registration | null> {
-    return await this.registrationRepo.find(participant_id, day_id);
+    return this.registrationRepo.find(participant_id, day_id);
   }
 }
