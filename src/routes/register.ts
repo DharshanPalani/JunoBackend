@@ -29,6 +29,14 @@ registerRouter.post(
 );
 
 registerRouter.get(
+  "/register/payment/status",
+  authMiddleware,
+  participantsPaymentController.paymentStatus.bind(
+    participantsPaymentController,
+  ),
+);
+
+registerRouter.get(
   "/registrations/:day_id",
   authMiddleware,
   registerController.registrations.bind(registerController),

@@ -99,7 +99,7 @@ export class RegisterService {
       return {
         message: "No registrations found",
         status: "success",
-        participant: null,
+        event_ids: [],
       };
     }
 
@@ -110,7 +110,7 @@ export class RegisterService {
     return {
       message: "Fetched participation event data",
       status: "success",
-      event_ids: eventsRegistered.data,
+      event_ids: eventsRegistered.data ?? [],
     };
   }
 }

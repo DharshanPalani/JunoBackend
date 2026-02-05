@@ -50,12 +50,10 @@ export class ParticipantsPaymentController {
       );
 
       if (result.status != "success") {
-        response
-          .status(409)
-          .json({
-            message: "Issue with updating payment proof in the entry",
-            error: result.error,
-          });
+        response.status(409).json({
+          message: "Issue with updating payment proof in the entry",
+          error: result.error,
+        });
       }
       response
         .status(201)
@@ -63,5 +61,32 @@ export class ParticipantsPaymentController {
     } catch (error) {
       response.status(500).send(error);
     }
+  }
+
+  async paymentStatus(req: AuthRequest, res: Response) {
+    const participant = req.user;
+    const day_id = Number(req.query.day_id);
+
+    if (!day_id) {
+      return res.status(400).json({ code: "DAY_ID_REQUIRED" });
+    }
+
+    const registration = await this.registration.findRegistry(
+      participant.id,
+      day_id,
+    );
+
+    if (!registration) {
+      return res.status(200).json({
+        state: "NOT_REGISTERED",
+      });
+    }
+
+    const { participantsPayment } =
+      await this.participantsPayment.createOrFindPaymentEntry(registration.id);
+
+    return res.status(200).json({
+      state: participantsPayment.status,
+    });
   }
 }
