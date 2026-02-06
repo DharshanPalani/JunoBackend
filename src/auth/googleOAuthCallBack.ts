@@ -24,7 +24,7 @@ export class GoogleOAuth {
         res.redirect(
           `${process.env.FRONTEND_URL}${redirectPath}?access=${encodeURIComponent(
             accessToken,
-          )}&refresh=${encodeURIComponent(refreshToken)}?day=${dayId}`,
+          )}&refresh=${encodeURIComponent(refreshToken)}&day=${dayId}`,
         );
       },
     )(req, res, next);
