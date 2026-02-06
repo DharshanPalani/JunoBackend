@@ -4,10 +4,13 @@ import { signAccessToken, signRefreshToken } from "../utils/tokenHelper.js";
 
 export class GoogleOAuth {
   googleCallback = (req: Request, res: Response, next: NextFunction) => {
-    // const rawState = req.query.state as string;
-    // This is the state data sent from frontend
-    // Which then the google oauth receives and sends it back for the callback
-    // const state = JSON.parse(decodeURIComponent(rawState));
+    let dayId: number | undefined;
+
+    if (typeof req.query.state === "string") {
+      const parsed = parseInt(req.query.state, 10);
+      if (!isNaN(parsed)) dayId = parsed;
+    }
+
     passport.authenticate(
       "google",
       { session: false },
@@ -17,10 +20,11 @@ export class GoogleOAuth {
         const accessToken = signAccessToken(participantId);
         const refreshToken = signRefreshToken(participantId);
 
+        const redirectPath = dayId ? `/register/${dayId}` : "/";
         res.redirect(
-          `${process.env.FRONTEND_URL}/auth/success?refresh=${encodeURIComponent(
-            refreshToken,
-          )}&access=${encodeURIComponent(accessToken)}`,
+          `${process.env.FRONTEND_URL}${redirectPath}?access=${encodeURIComponent(
+            accessToken,
+          )}&refresh=${encodeURIComponent(refreshToken)}`,
         );
       },
     )(req, res, next);

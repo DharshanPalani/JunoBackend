@@ -1,5 +1,5 @@
 import express from "express";
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import passport from "passport";
 import { GoogleOAuth } from "../auth/googleOAuthCallBack.js";
 import { signAccessToken } from "../utils/tokenHelper.js";
@@ -8,16 +8,22 @@ import jwt from "jsonwebtoken";
 import { ParticipantsService } from "../services/participants.js";
 import { authMiddleware, AuthRequest } from "../middlewares/auth.js";
 
+import { ParsedQs } from "qs";
+
 const googleOAuth = new GoogleOAuth();
 
 const authRouter = express.Router();
 
-authRouter.get(
-  "/google",
+authRouter.get("/google", (req: Request, res: Response, next: NextFunction) => {
+  const stateParam =
+    typeof req.query.state === "string" ? req.query.state : undefined;
+
   passport.authenticate("google", {
     scope: ["profile", "email"],
-  }),
-);
+    state: stateParam,
+    session: false,
+  })(req, res, next);
+});
 
 authRouter.get(
   "/google/callback",
