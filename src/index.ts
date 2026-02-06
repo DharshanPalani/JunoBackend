@@ -16,6 +16,7 @@ const app = express();
 
 const allowedOrigins = [
   "https://juno-frontend-staging.vercel.app",
+  "https://juno2k26.vercel.app",
   "http://localhost:5173",
 ];
 
