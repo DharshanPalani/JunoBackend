@@ -53,7 +53,7 @@ app.use("/admin", eventRouter);
 app.use("/profile", profileRouter);
 
 app.get("/", (_req, res) => {
-  res.send("Hello from backend!");
+  res.send("PING");
 });
 
 export default app;
