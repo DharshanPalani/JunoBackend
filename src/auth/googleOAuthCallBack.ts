@@ -20,11 +20,11 @@ export class GoogleOAuth {
         const accessToken = signAccessToken(participantId);
         const refreshToken = signRefreshToken(participantId);
 
-        const redirectPath = dayId ? `/register/${dayId}` : "/";
+        const redirectPath = "/auth/success";
         res.redirect(
           `${process.env.FRONTEND_URL}${redirectPath}?access=${encodeURIComponent(
             accessToken,
-          )}&refresh=${encodeURIComponent(refreshToken)}`,
+          )}&refresh=${encodeURIComponent(refreshToken)}?day=${dayId}`,
         );
       },
     )(req, res, next);
