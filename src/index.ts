@@ -1,7 +1,5 @@
 import express from "express";
 import authRouter from "./routes/auth.js";
-import dayRouter from "./routes/day.js";
-import eventRouter from "./routes/event.js";
 import registerRouter from "./routes/register.js";
 import profileRouter from "./routes/profile.js";
 import adminRouter from "./routes/admin.js";
@@ -49,8 +47,7 @@ schemaExecutor(true);
 
 app.use("/auth", authRouter);
 app.use("/event", registerRouter);
-// app.use("/admin", dayRouter);
-// app.use("/admin", eventRouter);
+
 app.use("/admin", adminRouter);
 app.use("/profile", profileRouter);
 
