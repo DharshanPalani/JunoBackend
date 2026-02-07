@@ -41,7 +41,7 @@ export class AdminRepository {
           LEFT JOIN events e
             ON e.id = re.event_id
           LEFT JOIN participants_payment pp
-            ON pp.registration_id = r.id
+            ON pp.registration_id = r.id AND pp.status != 'NO_PAYMENT'
 
           GROUP BY
             p.id,
