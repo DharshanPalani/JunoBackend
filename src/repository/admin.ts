@@ -42,17 +42,19 @@ export class AdminRepository {
       LEFT JOIN events e
         ON e.id = re.event_id
       LEFT JOIN participants_payment pp
-        ON pp.registration_id = r.id AND pp.status != 'NO_PAYMENT'
+        ON pp.registration_id = r.id
+
+      WHERE pp.status IS NULL OR pp.status != 'NO_PAYMENT'
 
       GROUP BY
-          p.id,
-          d.id,
-          r.id,
-          pp.id
+        p.id,
+        d.id,
+        r.id,
+        pp.id
 
       ORDER BY
-          d.id,
-          r.registered_at DESC;
+        d.id,
+        r.registered_at DESC;
     `;
 
     const result = await pool.query(query);
