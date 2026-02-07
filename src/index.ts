@@ -49,8 +49,8 @@ schemaExecutor(true);
 
 app.use("/auth", authRouter);
 app.use("/event", registerRouter);
-app.use("/admin", dayRouter);
-app.use("/admin", eventRouter);
+// app.use("/admin", dayRouter);
+// app.use("/admin", eventRouter);
 app.use("/admin", adminRouter);
 app.use("/profile", profileRouter);
 
