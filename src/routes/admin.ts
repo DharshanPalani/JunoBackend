@@ -7,7 +7,6 @@ const adminController = new AdminController();
 const adminRouter = Router();
 
 adminRouter.use("/day", dayRouter);
-
 adminRouter.use("/event", eventRouter);
 
 adminRouter.get(
