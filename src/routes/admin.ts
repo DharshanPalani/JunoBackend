@@ -14,4 +14,8 @@ adminRouter.get(
   adminController.fetchRegistrations.bind(adminController),
 );
 
+adminRouter.get("/ping", (_req, res) => {
+  res.send("ADMIN OK");
+});
+
 export default adminRouter;
