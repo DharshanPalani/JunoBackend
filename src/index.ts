@@ -52,7 +52,7 @@ app.use("/admin", adminRouter);
 app.use("/profile", profileRouter);
 
 app.get("/", (_req, res) => {
-  res.send("PING");
+  res.send("Health check done!");
 });
 
 export default app;
