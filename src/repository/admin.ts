@@ -44,7 +44,7 @@ export class AdminRepository {
       LEFT JOIN participants_payment pp
         ON pp.registration_id = r.id
 
-      WHERE pp.status IS NULL OR pp.status != 'NO_PAYMENT'
+
 
       GROUP BY
         p.id,
