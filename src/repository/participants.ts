@@ -6,16 +6,9 @@ export class ParticipantsRepository {
     data: Pick<Participant, "google_id" | "participant_name" | "email">,
   ) {
     const result = await pool.query(
-      `INSERT INTO participants
-      (
-        google_id,
-        participant_name,
-        email
-      )
-
-      VALUES ($1, $2, $3)
-
-      RETURNING *`,
+      `INSERT INTO participants (google_id, participant_name, email)
+       VALUES ($1, $2, $3)
+       RETURNING *`,
       [data.google_id, data.participant_name, data.email],
     );
     return result.rows[0];
@@ -39,25 +32,35 @@ export class ParticipantsRepository {
     return result.rows[0] ?? null;
   }
 
-  async update(
-    input: Omit<Participant, "google_id" | "email" | "created_at">,
+  async updatePartial(
+    input: Partial<Omit<Participant, "google_id" | "email" | "created_at">> & {
+      id: number;
+    },
   ): Promise<Participant | null> {
-    const result = await pool.query(
-      `UPDATE participants SET participant_name = $1,
-          college_name = $2,
-          department = $3,
-          academic_year = $4,
-          contact_number = $5 WHERE id = $6 RETURNING *`,
-      [
-        input.participant_name,
-        input.college_name,
-        input.department,
-        input.academic_year,
-        input.contact_number,
-        input.id,
-      ],
+    const { id, ...fields } = input;
+
+    const entries = Object.entries(fields).filter(
+      ([_, value]) => value !== undefined,
     );
 
-    return result.rows[0];
+    if (entries.length === 0) {
+      const existing = await this.find({ id });
+      return existing;
+    }
+
+    const setClauses = entries.map(([key], index) => `${key} = $${index + 1}`);
+
+    const values = entries.map(([_, value]) => value);
+
+    const query = `
+      UPDATE participants
+      SET ${setClauses.join(", ")}
+      WHERE id = $${entries.length + 1}
+      RETURNING *
+    `;
+
+    const result = await pool.query(query, [...values, id]);
+
+    return result.rows[0] ?? null;
   }
 }

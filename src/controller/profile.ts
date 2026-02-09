@@ -1,6 +1,6 @@
 import { AuthRequest } from "../middlewares/auth.js";
 import { ParticipantsService } from "../services/participants.js";
-
+import { participantProfileSchema } from "../validation/participant.js";
 import type { Response } from "express";
 
 export class ProfileController {
@@ -8,25 +8,25 @@ export class ProfileController {
 
   async participantProfileUpdate(req: AuthRequest, res: Response) {
     const participant = req.user;
-    if (!participant?.id)
+    if (!participant?.id) {
       return res.status(401).json({ error: "Unauthorized" });
+    }
 
-    const {
-      participant_name,
-      college_name,
-      department,
-      academic_year,
-      contact_number,
-    } = req.body;
+    const parsed = participantProfileSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: "INVALID_INPUT",
+        issues: parsed.error.flatten(),
+      });
+    }
 
-    const result = await this.participantService.updateParticipant({
+    const payload = {
       id: participant.id,
-      participant_name,
-      college_name,
-      department,
-      academic_year,
-      contact_number,
-    });
+      ...parsed.data,
+    };
+
+    const result =
+      await this.participantService.updateParticipantPartial(payload);
 
     if (!result.participant) {
       return res.status(500).json({ error: result.error ?? "Update failed" });
@@ -34,21 +34,27 @@ export class ProfileController {
 
     const { id, google_id, created_at, ...publicParticipant } =
       result.participant;
+
     return res.status(200).json(publicParticipant);
   }
 
-  async fetchParticipantProfile(request: AuthRequest, response: Response) {
-    const participant = request.user;
+  async fetchParticipantProfile(req: AuthRequest, res: Response) {
+    const participant = req.user;
+    if (!participant?.id) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     const result = await this.participantService.findParticipantWithID({
       id: participant.id,
     });
 
+    if (!result.participant) {
+      return res.status(404).json({ error: "Participant not found" });
+    }
+
     const { id, google_id, created_at, ...publicParticipant } =
       result.participant;
 
-    response
-      .status(result.status == "found" ? 201 : 409)
-      .json(publicParticipant);
+    return res.status(200).json(publicParticipant);
   }
 }
