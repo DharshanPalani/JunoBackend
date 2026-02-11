@@ -16,7 +16,6 @@ export class ProfileController {
     if (!parsed.success) {
       return res.status(400).json({
         error: "INVALID_INPUT",
-        issues: parsed.error.flatten(),
       });
     }
 
