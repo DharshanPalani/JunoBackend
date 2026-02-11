@@ -8,22 +8,13 @@ type ParticipantServiceReturn = {
 };
 
 export class ParticipantsService {
-  private participantsRepo: ParticipantsRepository;
+  private participantsRepo = new ParticipantsRepository();
 
-  constructor() {
-    this.participantsRepo = new ParticipantsRepository();
-  }
-
-  async findParticipantWithID(
-    input: Pick<Participant, "id">,
-  ): Promise<ParticipantServiceReturn> {
+  async findParticipantWithID(input: Pick<Participant, "id">) {
     const result = await this.participantsRepo.find(input);
-
-    if (result) {
-      return { participant: result, status: "found" };
-    }
-
-    return { participant: null, status: "not_found" };
+    return result
+      ? { participant: result, status: "found" }
+      : { participant: null, status: "not_found" };
   }
 
   async findOrCreateParticipant(
@@ -40,19 +31,23 @@ export class ParticipantsService {
     return { participant: result, status: "created" };
   }
 
-  async updateParticipant(
-    input: Omit<Participant, "google_id" | "email" | "created_at">,
-  ): Promise<ParticipantServiceReturn> {
+  async updateParticipantPartial(
+    input: Partial<Omit<Participant, "google_id" | "email" | "created_at">> & {
+      id: number;
+    },
+  ) {
     try {
-      const result = await this.participantsRepo.update(input);
+      const result = await this.participantsRepo.updatePartial(input);
+
       if (!result) {
-        throw new Error("Update didn't return the participant");
+        throw new Error("Participant update failed");
       }
+
       return {
         participant: result,
         status: "success",
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         participant: null,
         status: "error",
