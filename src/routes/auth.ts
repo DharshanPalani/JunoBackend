@@ -9,10 +9,14 @@ import { ParticipantsService } from "../services/participants.js";
 import { authMiddleware, AuthRequest } from "../middlewares/auth.js";
 
 import { ParsedQs } from "qs";
+import { AuthController } from "../controller/auth.js";
 
 const googleOAuth = new GoogleOAuth();
 
 const authRouter = express.Router();
+const authController = new AuthController();
+
+authRouter.post("/register", authController.register.bind(authController));
 
 authRouter.get("/google", (req: Request, res: Response, next: NextFunction) => {
   const stateParam =
