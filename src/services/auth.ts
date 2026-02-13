@@ -47,8 +47,30 @@ export class AuthService {
     }
   }
 
-  // async findUser(input: Omit<Auth, "created_at">): Promise<AuthServiceReturn> {
-  //   try {
-  //   } catch (error: unknown) {}
-  // }
+  async findUser(input: Pick<Auth, "username">): Promise<AuthServiceReturn> {
+    try {
+      const checkUser = await this.authRepo.findByUsername(input.username);
+      if (checkUser == null) {
+        return {
+          message: "No user found with the given username",
+          status: "error",
+          data: null,
+        };
+      }
+
+      return {
+        message: "User found successfully",
+        status: "success",
+        data: checkUser,
+      };
+    } catch (error: unknown) {
+      return {
+        message: "Internal error in auth findUser",
+        status: "error",
+        data: null,
+        // Idk how it sends error but stack overflow had it, idk sybau.
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
 }
