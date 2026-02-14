@@ -70,7 +70,7 @@ export class AuthController {
           .cookie("test", checkCode, {
             httpOnly: true,
             sameSite: "none",
-            secure: false,
+            secure: true,
             maxAge: 15 * 60 * 1000,
             path: "/",
           })
