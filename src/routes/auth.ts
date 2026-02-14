@@ -20,6 +20,8 @@ authRouter.post("/register", authController.register.bind(authController));
 
 authRouter.post("/login", authController.login.bind(authController));
 
+authRouter.post("/exchange", authController.exchange.bind(authController));
+
 authRouter.get("/google", (req: Request, res: Response, next: NextFunction) => {
   const stateParam =
     typeof req.query.state === "string" ? req.query.state : undefined;
