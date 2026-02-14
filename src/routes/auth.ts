@@ -22,6 +22,21 @@ authRouter.post("/login", authController.login.bind(authController));
 
 authRouter.post("/exchange", authController.exchange.bind(authController));
 
+authRouter.get("/check-cookie", (req: Request, res: Response) => {
+  const cookieValue = req.cookies["test"];
+
+  if (cookieValue) {
+    return res.status(200).json({
+      message: "Cookie received!",
+      value: cookieValue,
+    });
+  } else {
+    return res.status(401).json({
+      message: "Cookie not sent or not found",
+    });
+  }
+});
+
 authRouter.get("/google", (req: Request, res: Response, next: NextFunction) => {
   const stateParam =
     typeof req.query.state === "string" ? req.query.state : undefined;
