@@ -8,7 +8,7 @@ type AuthServiceReturn = {
   data: Auth | null;
   error?: unknown;
 };
-
+type AuthSearchInput = Partial<Pick<Auth, "username" | "id">>;
 export class AuthService {
   private authRepo = new AuthRepository();
   async createUser(
@@ -47,29 +47,41 @@ export class AuthService {
     }
   }
 
-  async findUser(input: Pick<Auth, "username">): Promise<AuthServiceReturn> {
+  async findUser(input: AuthSearchInput): Promise<AuthServiceReturn> {
     try {
-      const checkUser = await this.authRepo.findByUsername(input.username);
-      if (checkUser == null) {
+      let checkUser;
+
+      if (input.id) {
+        checkUser = await this.authRepo.findByID(input.id);
+      } else if (input.username) {
+        checkUser = await this.authRepo.findByUsername(input.username);
+      } else {
         return {
-          message: "No user found with the given username",
+          message: "No search parameter provided",
+          status: "error",
+          data: null,
+        };
+      }
+
+      if (!checkUser) {
+        return {
+          message: "No user found with the given parameter",
           status: "error",
           data: null,
         };
       }
 
       return {
-        message: "User found successfully",
+        message: "User found",
         status: "success",
         data: checkUser,
       };
-    } catch (error: unknown) {
+    } catch (err) {
+      console.error("findUser error:", err);
       return {
-        message: "Internal error in auth findUser",
+        message: "Internal Server Error",
         status: "error",
         data: null,
-        // Idk how it sends error but stack overflow had it, idk sybau.
-        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }

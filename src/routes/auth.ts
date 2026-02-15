@@ -10,6 +10,7 @@ import { authMiddleware, AuthRequest } from "../middlewares/auth.js";
 
 import { ParsedQs } from "qs";
 import { AuthController } from "../controller/auth.js";
+import { adminRequireSession } from "../middlewares/adminAuth.js";
 
 const googleOAuth = new GoogleOAuth();
 
@@ -22,8 +23,14 @@ authRouter.post("/login", authController.login.bind(authController));
 
 authRouter.post("/exchange", authController.exchange.bind(authController));
 
+authRouter.get(
+  "/admin/me",
+  adminRequireSession,
+  authController.getAdminSelf.bind(authController),
+);
+
 authRouter.get("/check-cookie", (req: Request, res: Response) => {
-  const cookieValue = req.cookies["test"];
+  const cookieValue = req.cookies["session"];
 
   if (cookieValue) {
     return res.status(200).json({
