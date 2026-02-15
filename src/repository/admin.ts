@@ -61,4 +61,12 @@ export class AdminRepository {
 
     return result.rows;
   }
+
+  async markDelete(id: number) {
+    const query = `UPDATE registrations
+                  SET deleted_at = NOW()
+                  WHERE id = $1`;
+
+    await pool.query(query, [id]);
+  }
 }
