@@ -44,7 +44,7 @@ export class AuthController {
 
       const uuid = uuidv4();
 
-      await redisClient.set(`code:${uuid}`, isUserExists.data.id, {
+      await redisClient.set(`code:${uuid}`, isUserExists.data.username, {
         EX: 67,
       });
 
@@ -61,24 +61,36 @@ export class AuthController {
   async exchange(request: Request, response: Response) {
     try {
       const { code } = request.body;
-      const checkCode = await redisClient.get(`code:${code}`);
 
-      if (checkCode != null) {
-        await redisClient.del(`code:${code}`);
-        response
-          .status(202)
-          .cookie("test", checkCode, {
-            httpOnly: true,
-            sameSite: "none",
-            secure: true,
-            maxAge: 15 * 60 * 1000,
-            path: "/",
-          })
-          .json({ message: "Exchanged successfully!" });
-      } else {
-        response.status(402).send("Invalid CODE");
+      const checkCode = await redisClient.get(`code:${code}`);
+      if (!checkCode) {
+        return response.status(402).send("Invalid CODE");
       }
-    } catch (error: unknown) {
+
+      const userId =
+        typeof checkCode === "string" ? checkCode : checkCode.toString("utf-8");
+
+      await redisClient.del(`code:${code}`);
+
+      const sessionId = uuidv4();
+
+      await redisClient.set(
+        `session:${sessionId}`,
+        JSON.stringify({ userId }),
+        { EX: 7 * 24 * 60 * 60 },
+      );
+
+      response
+        .status(202)
+        .cookie("session", sessionId, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+          path: "/",
+        })
+        .json({ message: "Exchanged successfully!" });
+    } catch (error) {
       response.status(500).json({ message: "Internal Server Error" });
     }
   }
