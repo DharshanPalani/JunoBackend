@@ -9,10 +9,40 @@ import { ParticipantsService } from "../services/participants.js";
 import { authMiddleware, AuthRequest } from "../middlewares/auth.js";
 
 import { ParsedQs } from "qs";
+import { AuthController } from "../controller/auth.js";
+import { adminRequireSession } from "../middlewares/adminAuth.js";
 
 const googleOAuth = new GoogleOAuth();
 
 const authRouter = express.Router();
+const authController = new AuthController();
+
+authRouter.post("/register", authController.register.bind(authController));
+
+authRouter.post("/login", authController.login.bind(authController));
+
+authRouter.post("/exchange", authController.exchange.bind(authController));
+
+authRouter.get(
+  "/admin/me",
+  adminRequireSession,
+  authController.getAdminSelf.bind(authController),
+);
+
+authRouter.get("/check-cookie", (req: Request, res: Response) => {
+  const cookieValue = req.cookies["session"];
+
+  if (cookieValue) {
+    return res.status(200).json({
+      message: "Cookie received!",
+      value: cookieValue,
+    });
+  } else {
+    return res.status(401).json({
+      message: "Cookie not sent or not found",
+    });
+  }
+});
 
 authRouter.get("/google", (req: Request, res: Response, next: NextFunction) => {
   const stateParam =
