@@ -8,8 +8,28 @@ export class AdminController {
     try {
       const result = await this.adminService.fetchRegistrations();
       response
-        .status(result.status == "success" ? 201 : 409)
+        .status(result.status === "success" ? 200 : 409)
         .json({ message: result.message, data: result.data });
+    } catch (error) {
+      response
+        .status(500)
+        .json({ message: "Internal server error from admin" });
+    }
+  }
+
+  async deleteRegistration(request: Request, response: Response) {
+    const { delete_ids } = request.body;
+
+    if (!delete_ids || !Array.isArray(delete_ids)) {
+      return response.status(400).json({ message: "Invalid request" });
+    }
+
+    try {
+      const result = await this.adminService.softDelete(delete_ids);
+
+      response
+        .status(result.status === "success" ? 200 : 409)
+        .json({ message: result.message });
     } catch (error) {
       response
         .status(500)

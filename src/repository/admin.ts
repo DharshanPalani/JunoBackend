@@ -23,42 +23,50 @@ export class AdminRepository {
           pp.paid_at,
 
           COALESCE(
-            json_agg(
-              DISTINCT jsonb_build_object(
-                'event_id', e.id,
-                'event_name', e.event_name
-              )
-            ) FILTER (WHERE e.id IS NOT NULL),
-            '[]'
+              json_agg(
+                  DISTINCT jsonb_build_object(
+                      'event_id', e.id,
+                      'event_name', e.event_name
+                  )
+              ) FILTER (WHERE e.id IS NOT NULL),
+              '[]'
           ) AS events
 
       FROM registrations r
       JOIN participants p
-        ON p.id = r.participant_id
+          ON p.id = r.participant_id
       JOIN event_days d
-        ON d.id = r.day_id
+          ON d.id = r.day_id
       LEFT JOIN registration_events re
-        ON re.registration_id = r.id
+          ON re.registration_id = r.id
       LEFT JOIN events e
-        ON e.id = re.event_id
+          ON e.id = re.event_id
       LEFT JOIN participants_payment pp
-        ON pp.registration_id = r.id
+          ON pp.registration_id = r.id
 
-
+      WHERE r.deleted_at IS NULL
 
       GROUP BY
-        p.id,
-        d.id,
-        r.id,
-        pp.id
+          p.id,
+          d.id,
+          r.id,
+          pp.id
 
       ORDER BY
-        d.id,
-        r.registered_at DESC;
+          d.id,
+          r.registered_at DESC;
     `;
 
     const result = await pool.query(query);
 
     return result.rows;
+  }
+
+  async markDelete(id: number) {
+    const query = `UPDATE registrations
+                  SET deleted_at = NOW()
+                  WHERE id = $1`;
+
+    await pool.query(query, [id]);
   }
 }
