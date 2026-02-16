@@ -8,6 +8,7 @@ type AdminRegistrationReturn = {
 
 export class AdminService {
   private adminRepository = new AdminRepository();
+
   async fetchRegistrations(): Promise<AdminRegistrationReturn> {
     try {
       const result = await this.adminRepository.getAllRegistration();
@@ -18,7 +19,17 @@ export class AdminService {
         data: result,
       };
     } catch (error) {
-      return { message: error, status: "error", data: null };
+      return { message: String(error), status: "error", data: null };
+    }
+  }
+
+  async softDelete(ids: number[]): Promise<AdminRegistrationReturn> {
+    try {
+      await Promise.all(ids.map((id) => this.adminRepository.markDelete(id)));
+
+      return { message: "Deleted successfully", status: "success", data: null };
+    } catch (error) {
+      return { message: String(error), status: "error", data: null };
     }
   }
 }
