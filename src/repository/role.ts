@@ -18,11 +18,11 @@ export class RoleRepository {
     return result.rows[0];
   }
 
-  async findRoleByName(role_name: string): Promise<Role> {
+  async findRoleByName(role_name: string): Promise<Role | null> {
     const result = await pool.query(
       `SELECT * FROM roles WHERE role_name = $1`,
       [role_name],
     );
-    return result.rows[0];
+    return result.rows[0] ?? null;
   }
 }

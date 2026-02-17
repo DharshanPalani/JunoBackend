@@ -51,7 +51,7 @@ export class AuthService {
 
       const role = await this.roleRepo.findRoleByName("viewer");
 
-      if (!role) {
+      if (role == null) {
         return {
           message: "Default role not found",
           status: "error",
