@@ -17,7 +17,7 @@ export class AuthController {
 
       response
         .status(result.status == "success" ? 201 : 409)
-        .json({ message: result.message, data: result.data });
+        .json({ message: result.message, data: result.user });
     } catch (error: unknown) {
       response.status(500).json({ message: "Internal Server Error" });
     }
@@ -35,7 +35,7 @@ export class AuthController {
       }
 
       const verifyPassword = await argon2.verify(
-        isUserExists.data.password,
+        isUserExists.user.password,
         password,
       );
 
@@ -47,7 +47,7 @@ export class AuthController {
 
       const uuid = uuidv4();
 
-      await redisClient.set(`code:${uuid}`, isUserExists.data.id, {
+      await redisClient.set(`code:${uuid}`, isUserExists.user.id, {
         EX: 67,
       });
 
@@ -115,8 +115,8 @@ export class AuthController {
       res.status(200).json({
         message: "User retrieved successfully",
         user: {
-          id: result.data.id,
-          username: result.data.username,
+          id: result.user.id,
+          username: result.user.username,
         },
       });
     } catch (err) {
