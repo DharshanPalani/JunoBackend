@@ -59,7 +59,7 @@ export class AuthService {
         };
       }
 
-      const profile = await this.profileRepo.create(user.id, role.id, null);
+      const profile = await this.profileRepo.create(user.id, role.id, "");
 
       return {
         message: "User created successfully",
