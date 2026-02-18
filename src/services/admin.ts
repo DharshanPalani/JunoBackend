@@ -35,7 +35,9 @@ export class AdminService {
 
   async recoverDelete(ids: number[]): Promise<AdminRegistrationReturn> {
     try {
-      await Promise.all(ids.map((id) => this.adminRepository.markDelete(id)));
+      await Promise.all(
+        ids.map((id) => this.adminRepository.recoverDelete(id)),
+      );
 
       return {
         message: "Recovered successfully",
