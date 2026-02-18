@@ -4,7 +4,7 @@ import { AdminService } from "../services/admin.js";
 export class AdminController {
   private adminService = new AdminService();
 
-  async fetchRegistrations(request: Request, response: Response) {
+  async fetchRegistrations(_request: Request, response: Response) {
     try {
       const result = await this.adminService.fetchRegistrations();
       response
@@ -30,6 +30,19 @@ export class AdminController {
       response
         .status(result.status === "success" ? 200 : 409)
         .json({ message: result.message });
+    } catch (error) {
+      response
+        .status(500)
+        .json({ message: "Internal server error from admin" });
+    }
+  }
+
+  async fetchDeletedRegistration(_request: Request, response: Response) {
+    try {
+      const result = await this.adminService.fetchDeletedRegistrations();
+      response
+        .status(result.status === "success" ? 200 : 409)
+        .json({ message: result.message, data: result.data });
     } catch (error) {
       response
         .status(500)

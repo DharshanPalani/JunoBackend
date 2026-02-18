@@ -32,4 +32,18 @@ export class AdminService {
       return { message: String(error), status: "error", data: null };
     }
   }
+
+  async fetchDeletedRegistrations(): Promise<AdminRegistrationReturn> {
+    try {
+      const result = await this.adminRepository.getDelete();
+
+      return {
+        message: "Fetched deleted Registrations Successfully",
+        status: "success",
+        data: result,
+      };
+    } catch (error) {
+      return { message: String(error), status: "error", data: null };
+    }
+  }
 }

@@ -16,6 +16,12 @@ adminRouter.get(
   adminController.fetchRegistrations.bind(adminController),
 );
 
+adminRouter.get(
+  "/registrations/deletedData",
+  adminRequireSession,
+  adminController.fetchDeletedRegistration.bind(adminController),
+);
+
 adminRouter.post(
   "/delete",
   adminRequireSession,
