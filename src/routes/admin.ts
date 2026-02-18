@@ -28,6 +28,12 @@ adminRouter.post(
   adminController.deleteRegistration.bind(adminController),
 );
 
+adminRouter.post(
+  "/registrations/recover",
+  adminRequireSession,
+  adminController.recoverDeletedRegistrations.bind(adminController),
+);
+
 adminRouter.get("/ping", (_req, res) => {
   res.send("ADMIN OK");
 });

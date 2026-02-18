@@ -70,6 +70,13 @@ export class AdminRepository {
     await pool.query(query, [id]);
   }
 
+  async recoverDelete(id: number) {
+    const query = `UPDATE registrations
+                    SET delete_at = NULL
+                    WHERE id = $1`;
+    await pool.query(query, [id]);
+  }
+
   async getDelete() {
     const query = `
       SELECT
