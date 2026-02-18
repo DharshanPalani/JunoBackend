@@ -72,7 +72,7 @@ export class AdminRepository {
 
   async recoverDelete(id: number) {
     const query = `UPDATE registrations
-                    SET delete_at = NULL
+                    SET deleted_at = NULL
                     WHERE id = $1`;
     await pool.query(query, [id]);
   }
