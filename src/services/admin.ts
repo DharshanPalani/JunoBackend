@@ -32,4 +32,34 @@ export class AdminService {
       return { message: String(error), status: "error", data: null };
     }
   }
+
+  async recoverDelete(ids: number[]): Promise<AdminRegistrationReturn> {
+    try {
+      await Promise.all(
+        ids.map((id) => this.adminRepository.recoverDelete(id)),
+      );
+
+      return {
+        message: "Recovered successfully",
+        status: "success",
+        data: null,
+      };
+    } catch (error) {
+      return { message: String(error), status: "error", data: null };
+    }
+  }
+
+  async fetchDeletedRegistrations(): Promise<AdminRegistrationReturn> {
+    try {
+      const result = await this.adminRepository.getDelete();
+
+      return {
+        message: "Fetched deleted Registrations Successfully",
+        status: "success",
+        data: result,
+      };
+    } catch (error) {
+      return { message: String(error), status: "error", data: null };
+    }
+  }
 }
