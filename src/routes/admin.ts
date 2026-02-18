@@ -16,10 +16,22 @@ adminRouter.get(
   adminController.fetchRegistrations.bind(adminController),
 );
 
+adminRouter.get(
+  "/registrations/deletedData",
+  adminRequireSession,
+  adminController.fetchDeletedRegistration.bind(adminController),
+);
+
 adminRouter.post(
   "/delete",
   adminRequireSession,
   adminController.deleteRegistration.bind(adminController),
+);
+
+adminRouter.post(
+  "/registrations/recover",
+  adminRequireSession,
+  adminController.recoverDeletedRegistrations.bind(adminController),
 );
 
 adminRouter.get("/ping", (_req, res) => {
