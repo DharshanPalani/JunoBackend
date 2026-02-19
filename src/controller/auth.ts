@@ -5,6 +5,7 @@ import argon2 from "argon2";
 import redisClient from "../utils/redisClient.js";
 import { v4 as uuidv4 } from "uuid";
 import { AdminAuthRequest } from "../middlewares/adminAuth.js";
+import { profile } from "console";
 
 export class AuthController {
   private authService = new AuthService();
@@ -117,6 +118,8 @@ export class AuthController {
         user: {
           id: result.user.id,
           username: result.user.username,
+          role_name: result.user.role.role_name,
+          role_label: result.user.profile.role_label,
         },
       });
     } catch (err) {
