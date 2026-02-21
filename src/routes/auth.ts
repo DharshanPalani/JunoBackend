@@ -24,6 +24,12 @@ authRouter.post("/login", authController.login.bind(authController));
 authRouter.post("/exchange", authController.exchange.bind(authController));
 
 authRouter.get(
+  "/admin/all",
+  adminRequireSession,
+  authController.fetchAllUsers.bind(authController),
+);
+
+authRouter.get(
   "/admin/me",
   adminRequireSession,
   authController.getAdminSelf.bind(authController),
