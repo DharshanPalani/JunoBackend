@@ -16,6 +16,18 @@ type AuthServiceReturn = {
   error?: unknown;
 };
 
+type AuthListServiceReturn = {
+  message: string;
+  status: "success" | "error";
+  users: (Pick<Auth, "username"> & { profile: Profile; role: Role })[] | null;
+  error?: unknown;
+};
+
+type UserWithRelations = Pick<Auth, "username"> & {
+  profile: Profile;
+  role: Role;
+};
+
 type AuthSearchInput = Partial<Pick<Auth, "username" | "id">>;
 
 export class AuthService {
@@ -141,6 +153,43 @@ export class AuthService {
         message: "Internal Server Error",
         status: "error",
         user: null,
+      };
+    }
+  }
+
+  async findAllUsers(): Promise<AuthListServiceReturn> {
+    try {
+      const basicUsers = await this.authRepo.findAll();
+
+      if (!basicUsers || basicUsers.length === 0) {
+        return {
+          message: "No users found",
+          status: "success",
+          users: [],
+        };
+      }
+
+      const usersWithDetails: UserWithRelations[] = [];
+
+      for (const basicUser of basicUsers) {
+        const result = await this.findUser({ id: basicUser.id });
+
+        if (result.status === "success" && result.user) {
+          usersWithDetails.push(result.user);
+        }
+      }
+
+      return {
+        message: "Users fetched successfully",
+        status: "success",
+        users: usersWithDetails,
+      };
+    } catch (error: unknown) {
+      return {
+        message: "Failed to fetch users",
+        status: "error",
+        users: null,
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
