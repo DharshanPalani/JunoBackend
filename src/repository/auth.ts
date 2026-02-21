@@ -26,4 +26,11 @@ export class AuthRepository {
 
     return result.rows[0];
   }
+
+  async findAll(): Promise<Pick<Auth, "id" | "username">[]> {
+    const result = await pool.query<Pick<Auth, "id" | "username">>(
+      `SELECT id, username FROM users`,
+    );
+    return result.rows;
+  }
 }

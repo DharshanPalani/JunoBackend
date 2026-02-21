@@ -98,22 +98,22 @@ export class AuthController {
     }
   }
 
-  async getAdminSelf(req: AdminAuthRequest, res: Response) {
+  async getAdminSelf(request: AdminAuthRequest, response: Response) {
     try {
-      const userId = req.userId;
+      const userId = request.userId;
 
       const id = parseInt(userId);
       if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid user id" });
+        return response.status(400).json({ message: "Invalid user id" });
       }
 
       const result = await this.authService.findUser({ id: id });
 
       if (!result || result.status === "error") {
-        return res.status(404).json({ message: "User not found" });
+        return response.status(404).json({ message: "User not found" });
       }
 
-      res.status(200).json({
+      response.status(200).json({
         message: "User retrieved successfully",
         user: {
           id: result.user.id,
@@ -124,7 +124,31 @@ export class AuthController {
       });
     } catch (err) {
       console.error("GET /auth/me error:", err);
-      return res.status(500).json({ message: "Internal server error" });
+      return response.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async fetchAllUsers(_request: Request, response: Response) {
+    try {
+      const result = await this.authService.findAllUsers();
+
+      if (result.status === "error") {
+        return response.status(500).json({
+          message: result.message,
+          error: result.error ?? null,
+        });
+      }
+
+      return response.status(200).json({
+        message: result.message,
+        users: result.users,
+      });
+    } catch (error) {
+      console.error("fetchAllUsers controller error:", error);
+
+      return response.status(500).json({
+        message: "Internal Server Error",
+      });
     }
   }
 }
