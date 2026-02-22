@@ -116,4 +116,41 @@ export class ParticipantsPaymentService {
       };
     }
   }
+
+  async updatePaymentAdmin(input: {
+    registration_id: number;
+    transaction_id?: string;
+    status?: ParticipantsPayments["status"];
+  }) {
+    try {
+      const payment = await this.repo.find({
+        registration_id: input.registration_id,
+      });
+
+      if (!payment) {
+        return {
+          status: "error",
+          participantsPayment: null,
+          error: "Payment entry not found",
+        };
+      }
+
+      const updated = await this.repo.update({
+        id: payment.id,
+        transaction_id: input.transaction_id,
+        status: input.status,
+      });
+
+      return {
+        status: "success",
+        participantsPayment: updated,
+      };
+    } catch (err: any) {
+      return {
+        status: "error",
+        participantsPayment: null,
+        error: err.message,
+      };
+    }
+  }
 }

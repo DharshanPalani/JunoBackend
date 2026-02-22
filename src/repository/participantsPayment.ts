@@ -37,21 +37,31 @@ export class ParticipantsPaymentRepository {
 
   async update(input: {
     id: number;
-    status: ParticipantsPayments["status"];
+    status?: ParticipantsPayments["status"];
+    transaction_id?: string;
     payment_screenshot?: string;
   }): Promise<ParticipantsPayments> {
     const result = await pool.query(
-      `UPDATE participants_payment
-      SET status = $1,
-          payment_screenshot = COALESCE($2, payment_screenshot),
-          paid_at = CASE
-            WHEN status IN ('PAYMENT_DONE', 'VERIFIED_PAYMENT')
-            THEN NOW()
-            ELSE paid_at
-          END
-      WHERE id = $3
-      RETURNING *`,
-      [input.status, input.payment_screenshot ?? null, input.id],
+      `
+    UPDATE participants_payment
+    SET 
+      status = COALESCE($1, status),
+      transaction_id = COALESCE($2, transaction_id),
+      payment_screenshot = COALESCE($3, payment_screenshot),
+      paid_at = CASE
+        WHEN COALESCE($1, status) IN ('PAYMENT_DONE', 'VERIFIED_PAYMENT')
+        THEN NOW()
+        ELSE paid_at
+      END
+    WHERE id = $4
+    RETURNING *
+    `,
+      [
+        input.status ?? null,
+        input.transaction_id ?? null,
+        input.payment_screenshot ?? null,
+        input.id,
+      ],
     );
 
     return result.rows[0];

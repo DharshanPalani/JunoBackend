@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AdminService } from "../services/admin.js";
+import { AuthRequest } from "../middlewares/auth.js";
 
 export class AdminController {
   private adminService = new AdminService();
@@ -67,6 +68,55 @@ export class AdminController {
       response
         .status(500)
         .json({ message: "Internal server error from admin" });
+    }
+  }
+
+  async updateRegistration(request: AuthRequest, response: Response) {
+    try {
+      const {
+        participant_id,
+        registration_id,
+        participant_name,
+        college_name,
+        contact_number,
+        transaction_id,
+        payment_status,
+      } = request.body;
+
+      const user = request.user;
+
+      if (!participant_id || !registration_id) {
+        return response.status(400).json({
+          status: "error",
+          message: "participant_id and registration_id are required",
+        });
+      }
+
+      const result = await this.adminService.updateStandbyParticipant({
+        participant_id,
+        registration_id,
+        participant_name,
+        college_name,
+        contact_number,
+        transaction_id,
+        payment_status,
+      });
+
+      if (result.status === "error") {
+        return response.status(400).json(result);
+      }
+
+      return response.status(200).json({
+        status: "success",
+        message: "Registration updated successfully",
+      });
+    } catch (error: any) {
+      console.error("Update registration error:", error);
+
+      return response.status(500).json({
+        status: "error",
+        message: "Internal server error",
+      });
     }
   }
 }

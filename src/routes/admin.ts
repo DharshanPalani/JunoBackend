@@ -34,6 +34,12 @@ adminRouter.post(
   adminController.recoverDeletedRegistrations.bind(adminController),
 );
 
+adminRouter.post(
+  "/registrations/update",
+  adminRequireSession,
+  adminController.updateRegistration.bind(adminController),
+);
+
 adminRouter.get("/ping", (_req, res) => {
   res.send("ADMIN OK");
 });

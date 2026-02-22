@@ -1,0 +1,1 @@
+ALTER participants_payment ADD COLUMN transaction_id VARCHAR(200) NULL
