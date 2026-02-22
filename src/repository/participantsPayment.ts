@@ -66,4 +66,14 @@ export class ParticipantsPaymentRepository {
 
     return result.rows[0];
   }
+
+  async findByTransactionId(
+    transaction_id: string,
+  ): Promise<ParticipantsPayments | null> {
+    const result = await pool.query(
+      `SELECT * FROM participants_payment WHERE transaction_id = $1`,
+      [transaction_id],
+    );
+    return result.rows[0] ?? null;
+  }
 }

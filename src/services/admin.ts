@@ -1,8 +1,6 @@
 import { AdminRepository } from "../repository/admin.js";
-import { DayService } from "./day.js";
 import { ParticipantsService } from "./participants.js";
 import { ParticipantsPaymentService } from "./participantsPayment.js";
-import { RegistrationService } from "./registration.js";
 
 type AdminRegistrationReturn = {
   message: string;
@@ -14,12 +12,27 @@ export class AdminService {
   private adminRepository = new AdminRepository();
   private participantsPaymentService = new ParticipantsPaymentService();
   private participantsService = new ParticipantsService();
-  private registrationService = new RegistrationService();
-  private dayService = new DayService();
 
   async fetchRegistrations(): Promise<AdminRegistrationReturn> {
     try {
       const result = await this.adminRepository.getAllRegistration();
+
+      return {
+        message: "Fetched Registrations Successfully",
+        status: "success",
+        data: result,
+      };
+    } catch (error) {
+      return { message: String(error), status: "error", data: null };
+    }
+  }
+
+  async findByContact(
+    contact_number: string,
+  ): Promise<AdminRegistrationReturn> {
+    try {
+      const result =
+        await this.adminRepository.getRegistrationByContact(contact_number);
 
       return {
         message: "Fetched Registrations Successfully",

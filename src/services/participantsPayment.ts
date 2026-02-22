@@ -140,6 +140,23 @@ export class ParticipantsPaymentService {
         };
       }
 
+      if (input.transaction_id) {
+        const existingTransaction = await this.repo.findByTransactionId(
+          input.transaction_id,
+        );
+
+        if (
+          existingTransaction &&
+          existingTransaction.registration_id !== input.registration_id
+        ) {
+          return {
+            status: "error",
+            participantsPayment: null,
+            error: "Transaction ID already exists",
+          };
+        }
+      }
+
       const updated = await this.repo.update({
         id: payment.id,
         transaction_id: input.transaction_id,

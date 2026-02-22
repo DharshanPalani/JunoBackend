@@ -16,6 +16,12 @@ adminRouter.get(
   adminController.fetchRegistrations.bind(adminController),
 );
 
+adminRouter.get(
+  "/registrations/by-contact",
+  adminRequireSession,
+  adminController.fetchParticipantByContact.bind(adminController),
+);
+
 adminRouter.post(
   "/registrations/update",
   adminRequireSession,

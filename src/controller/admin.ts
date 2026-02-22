@@ -59,6 +59,30 @@ export class AdminController {
     }
   }
 
+  async fetchParticipantByContact(req: Request, res: Response) {
+    const { contact } = req.query as { contact?: string };
+
+    console.log(contact);
+
+    if (!contact) {
+      return res.status(400).json({ message: "Contact number required" });
+    }
+
+    const result = await this.adminService.findByContact(contact);
+
+    console.log("This is the end sybau");
+    console.log(result.data);
+
+    if (!result) {
+      return res.status(404).json({ message: "Participant not found" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      data: result,
+    });
+  }
+
   async fetchDeletedRegistration(_request: Request, response: Response) {
     try {
       const result = await this.adminService.fetchDeletedRegistrations();
@@ -83,10 +107,6 @@ export class AdminController {
         payment_status,
       } = request.body;
 
-      // const user = request.user;
-
-      console.log(request.body);
-
       if (!participant_id || !registration_id) {
         return response.status(400).json({
           status: "error",
@@ -94,7 +114,7 @@ export class AdminController {
         });
       }
 
-      const result = await this.adminService.updateStandbyParticipant({
+      const result: any = await this.adminService.updateStandbyParticipant({
         participant_id,
         registration_id,
         participant_name,
@@ -104,7 +124,17 @@ export class AdminController {
       });
 
       if (result.status === "error") {
-        return response.status(400).json(result);
+        if (result.error?.includes("Transaction ID already exists")) {
+          return response.status(409).json({
+            status: "error",
+            message: "Transaction ID already exists",
+          });
+        }
+
+        return response.status(400).json({
+          status: "error",
+          message: result.error || "Failed to update registration",
+        });
       }
 
       return response.status(200).json({
