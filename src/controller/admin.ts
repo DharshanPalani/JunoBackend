@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AdminService } from "../services/admin.js";
 import { AuthRequest } from "../middlewares/auth.js";
+import supabaseClient from "../utils/supabseClient.js";
 
 export class AdminController {
   private adminService = new AdminService();
@@ -78,12 +79,13 @@ export class AdminController {
         registration_id,
         participant_name,
         college_name,
-        contact_number,
         transaction_id,
         payment_status,
       } = request.body;
 
-      const user = request.user;
+      // const user = request.user;
+
+      console.log(request.body);
 
       if (!participant_id || !registration_id) {
         return response.status(400).json({
@@ -97,7 +99,6 @@ export class AdminController {
         registration_id,
         participant_name,
         college_name,
-        contact_number,
         transaction_id,
         payment_status,
       });
@@ -121,18 +122,72 @@ export class AdminController {
   }
 
   async fetchRegistrationPayment(request: Request, response: Response) {
-    const { registration_id } = request.query as {
-      registration_id?: string;
-    };
+    try {
+      const { registration_id } = request.query as {
+        registration_id?: string;
+      };
 
-    if (!registration_id) {
-      return response.status(400).json({ message: "participant_id missing" });
+      if (!registration_id) {
+        return response.status(400).json({
+          message: "registration_id is required",
+        });
+      }
+
+      const parsedRegistrationId = Number(registration_id);
+
+      if (isNaN(parsedRegistrationId)) {
+        return response.status(400).json({
+          message: "registration_id must be a valid number",
+        });
+      }
+
+      const result =
+        await this.adminService.fetchRegisteredPaymentData(
+          parsedRegistrationId,
+        );
+
+      if (!result) {
+        return response.status(404).json({
+          message: "Payment record not found",
+        });
+      }
+
+      let signedUrl: string | null = null;
+
+      if (result.payment_screenshot) {
+        const filePath = result.payment_screenshot.replace(
+          "payment_screenshots/",
+          "",
+        );
+
+        const { data, error } = await supabaseClient.storage
+          .from("payment_screenshots")
+          .createSignedUrl(filePath, 120);
+
+        if (error) {
+          console.error("Supabase signed URL error:", error);
+          return response.status(500).json({
+            message: "Failed to generate screenshot URL",
+          });
+        }
+
+        signedUrl = data?.signedUrl ?? null;
+      }
+
+      return response.status(200).json({
+        message: "Success",
+        payment_detail: {
+          transaction_id: result.transaction_id ?? null,
+          payment_screenshot: signedUrl,
+          status: result.status ?? null,
+        },
+      });
+    } catch (error) {
+      console.error("fetchRegistrationPayment error:", error);
+
+      return response.status(500).json({
+        message: "Internal server error",
+      });
     }
-
-    const result = await this.adminService.fetchRegisteredPaymentData(
-      parseInt(registration_id),
-    );
-
-    return response.status(200).json({ message: "Success", data: result });
   }
 }
