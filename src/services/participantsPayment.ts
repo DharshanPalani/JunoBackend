@@ -12,6 +12,7 @@ export class ParticipantsPaymentService {
 
   async createOrFindPaymentEntry(
     registration_id: number,
+    no_create?: boolean,
   ): Promise<ParticipantsPaymentServiceReturn> {
     try {
       const existing = await this.repo.find({ registration_id });
@@ -21,6 +22,10 @@ export class ParticipantsPaymentService {
           status: "success",
           participantsPayment: existing,
         };
+      }
+
+      if (no_create) {
+        return;
       }
 
       const created = await this.repo.create({ registration_id });

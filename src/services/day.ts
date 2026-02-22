@@ -45,4 +45,25 @@ export class DayService {
       return { message: error, status: "error", data: null };
     }
   }
+
+  async findDayByName(day_name: string): Promise<DayReturn> {
+    try {
+      const result = await this.eventDayRepo.findByName(day_name);
+      if (result != null) {
+        return {
+          message: "Found day successfully",
+          status: "success",
+          data: result,
+        };
+      } else {
+        return {
+          message: "Day not found or some other error",
+          status: "error",
+          data: null,
+        };
+      }
+    } catch (error: any) {
+      return { message: error.message, status: "error", data: null };
+    }
+  }
 }

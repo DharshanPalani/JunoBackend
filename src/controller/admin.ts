@@ -119,4 +119,20 @@ export class AdminController {
       });
     }
   }
+
+  async fetchRegistrationPayment(request: Request, response: Response) {
+    const { registration_id } = request.query as {
+      registration_id?: string;
+    };
+
+    if (!registration_id) {
+      return response.status(400).json({ message: "participant_id missing" });
+    }
+
+    const result = await this.adminService.fetchRegisteredPaymentData(
+      parseInt(registration_id),
+    );
+
+    return response.status(200).json({ message: "Success", data: result });
+  }
 }

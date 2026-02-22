@@ -16,10 +16,22 @@ adminRouter.get(
   adminController.fetchRegistrations.bind(adminController),
 );
 
+adminRouter.post(
+  "/registrations/update",
+  adminRequireSession,
+  adminController.updateRegistration.bind(adminController),
+);
+
 adminRouter.get(
   "/registrations/deletedData",
   adminRequireSession,
   adminController.fetchDeletedRegistration.bind(adminController),
+);
+
+adminRouter.get(
+  "/registrations/paymet-details",
+  adminRequireSession,
+  adminController.fetchRegistrationPayment.bind(adminController),
 );
 
 adminRouter.post(
@@ -32,12 +44,6 @@ adminRouter.post(
   "/registrations/recover",
   adminRequireSession,
   adminController.recoverDeletedRegistrations.bind(adminController),
-);
-
-adminRouter.post(
-  "/registrations/update",
-  adminRequireSession,
-  adminController.updateRegistration.bind(adminController),
 );
 
 adminRouter.get("/ping", (_req, res) => {

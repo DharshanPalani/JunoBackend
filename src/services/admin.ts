@@ -1,6 +1,8 @@
 import { AdminRepository } from "../repository/admin.js";
+import { DayService } from "./day.js";
 import { ParticipantsService } from "./participants.js";
 import { ParticipantsPaymentService } from "./participantsPayment.js";
+import { RegistrationService } from "./registration.js";
 
 type AdminRegistrationReturn = {
   message: string;
@@ -12,6 +14,8 @@ export class AdminService {
   private adminRepository = new AdminRepository();
   private participantsPaymentService = new ParticipantsPaymentService();
   private participantsService = new ParticipantsService();
+  private registrationService = new RegistrationService();
+  private dayService = new DayService();
 
   async fetchRegistrations(): Promise<AdminRegistrationReturn> {
     try {
@@ -112,5 +116,15 @@ export class AdminService {
       status: "success",
       participant: participantUpdate.participant,
     };
+  }
+
+  async fetchRegisteredPaymentData(registration_id: number) {
+    const result =
+      await this.participantsPaymentService.createOrFindPaymentEntry(
+        registration_id,
+        true,
+      );
+
+    return result.participantsPayment;
   }
 }
