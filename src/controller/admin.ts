@@ -62,25 +62,33 @@ export class AdminController {
   async fetchParticipantByContact(req: Request, res: Response) {
     const { contact } = req.query as { contact?: string };
 
-    console.log(contact);
-
     if (!contact) {
-      return res.status(400).json({ message: "Contact number required" });
+      return res.status(400).json({
+        message: "Contact number required",
+      });
     }
 
-    const result = await this.adminService.findByContact(contact);
+    try {
+      const registrations = await this.adminService.findByContact(contact);
 
-    console.log("This is the end sybau");
-    console.log(result.data);
+      if (!registrations || registrations.length === 0) {
+        return res.status(404).json({
+          message: "Participant not found",
+        });
+      }
 
-    if (!result) {
-      return res.status(404).json({ message: "Participant not found" });
+      console.log("REGISTRATIONS LENGTH:", registrations?.length);
+      console.log("REGISTRATIONS DATA:", registrations);
+
+      return res.status(200).json({
+        message: "Success",
+        data: registrations, // <-- NOW this is actual array
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Failed to fetch registrations",
+      });
     }
-
-    return res.status(200).json({
-      message: "Success",
-      data: result,
-    });
   }
 
   async fetchDeletedRegistration(_request: Request, response: Response) {

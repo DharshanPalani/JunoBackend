@@ -194,12 +194,13 @@ export class AdminRepository {
 
     ORDER BY
         r.registered_at DESC
-
-    LIMIT 1;
   `;
 
     const result = await pool.query(query, [contact]);
 
-    return result.rows[0] || null;
+    // console.log("Row count:", result.rowCount);
+    // console.log("Raw rows:", JSON.stringify(result.rows, null, 2));
+
+    return result.rows || null;
   }
 }

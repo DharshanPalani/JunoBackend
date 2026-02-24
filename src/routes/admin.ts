@@ -18,7 +18,7 @@ adminRouter.get(
 
 adminRouter.get(
   "/registrations/by-contact",
-  adminRequireSession,
+  // adminRequireSession,
   adminController.fetchParticipantByContact.bind(adminController),
 );
 

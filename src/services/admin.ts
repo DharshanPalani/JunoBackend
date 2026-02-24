@@ -27,21 +27,8 @@ export class AdminService {
     }
   }
 
-  async findByContact(
-    contact_number: string,
-  ): Promise<AdminRegistrationReturn> {
-    try {
-      const result =
-        await this.adminRepository.getRegistrationByContact(contact_number);
-
-      return {
-        message: "Fetched Registrations Successfully",
-        status: "success",
-        data: result,
-      };
-    } catch (error) {
-      return { message: String(error), status: "error", data: null };
-    }
+  async findByContact(contact_number: string) {
+    return await this.adminRepository.getRegistrationByContact(contact_number);
   }
 
   async softDelete(ids: number[]): Promise<AdminRegistrationReturn> {
